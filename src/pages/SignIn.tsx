@@ -64,6 +64,7 @@ export default function SignIn() {
             <Box sx={{mr:3}}>{<SiArlo />}</Box> 
             <Box sx={{color:'var(--main-color)',mr:1}}>Message</Box> Mingle
 
+             
             </Box>
            
             
