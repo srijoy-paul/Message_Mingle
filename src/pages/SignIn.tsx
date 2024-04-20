@@ -134,7 +134,7 @@ export default function SignIn() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 ,p:4, fontSize:20, backgroundColor:'var(--main-color)',"&:hover": {
-                    backgroundColor: "#F5DD61"
+                    backgroundColor: "var(--second-color)"
                   }}}
               >
                 Sign In

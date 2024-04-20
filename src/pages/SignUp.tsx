@@ -1,10 +1,12 @@
 import * as React from 'react';
+import '../index.css'
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Add from '../image/AddAvatar.png';
+
 
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -15,27 +17,94 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../index.css'
 import { Link } from 'react-router-dom';
 import { SiArlo } from "react-icons/si";
+import {  createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
+import {auth} from '../firebase'
+import {storage,db} from '../firebase'
+import {  ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore"; 
 
 
 
 
-// TODO remove, this demo shouldn't need to reset the theme.
+
+
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const [err, setErr] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => { 
+
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+
+    const data = new FormData(event.currentTarget); 
+
     console.log({
+      username:data.get('username'),
       email: data.get('email'),
-      password: data.get('password'),
+      password: data.get('password'), 
     });
-  };
+
+    const displayame = data.get('username')
+    console.log("displayame",displayame);
+  
+
+
+   const email = data.get('email');
+   const password = data.get('password');
+
+
+
+try {
+  const res = await createUserWithEmailAndPassword(auth,email,password); 
+  console.log("respo",res);
+  
+  
+const storageRef = ref(storage, displayame); 
+
+const uploadTask = uploadBytesResumable(storageRef, file);
+
+ uploadTask.on(
+  
+
+
+  (error) => {
+    // Handle unsuccessful uploads
+    setErr(true)
+  },
+  () => {
+    // Handle successful uploads on complete
+    // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+
+    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+      console.log('File available at', downloadURL);
+
+      await updateProfile(res.user,{
+        displayName,
+        photoURL:downloadURL,
+      });
+      await setDoc(doc(db,'users', res.user.uid),{
+        uid:res.user.uid,
+        displayName,
+        email,
+        photoURL:downloadURL
+      })
+    });
+  });
+
+  
+} catch (error) {
+  setErr(true)
+}}
+  
+
+
 
   return (
     
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" id='mainCard' sx={{ height: '75vh' ,width:'80vw',m:10,ml:20,mt:13, position:'relative',overflow:'hidden',boxShadow: 'rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px' ,}}>
+      <Grid container component="main" id='mainCard' sx={{ height: '75%' ,width:'80%',m:10,ml:20,mt:13, position:'relative',overflow:'hidden',boxShadow: 'rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px'}}>
         <CssBaseline/>
 
         <Box  id='hoverEfft' sx={{
@@ -112,10 +181,12 @@ export default function SignUp() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="username"
                 label="User Name"
                 name="username"
                 autoComplete="username"
+                type='text'
+                className='textfield'
                 
               />
               <TextField
@@ -125,7 +196,9 @@ export default function SignUp() {
                 id="email"
                 label="Email Address"
                 name="email"
+                type='email'
                 autoComplete="email"
+                className='textfield'
                
               />
               <TextField
@@ -137,21 +210,33 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                className='textfield'
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="file"
+                type="file"
+                id="file"
+                autoComplete="file"
+                className='textfield'
+                sx={{display:"none",}}
               />
+              <label htmlFor="file" id='avatar'><img src={Add} alt="image" height='45px' width='45px' /> <span style={{color:'gray'}}>Add your Profile image</span></label>
+              
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 ,p:4, fontSize:20, backgroundColor:'var(--main-color)',"&:hover": {
-                    backgroundColor: "#F5DD61"
+                    backgroundColor: "var(--second-color)"
                   }}}
+                 
               >
                 Sign up
               </Button>
+              {err && <span>something went wrong</span>}
               <Grid container>
                 <Grid item xs>
                   <Link to=''>
