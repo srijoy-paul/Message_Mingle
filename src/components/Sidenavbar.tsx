@@ -10,10 +10,15 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import { SiArlo } from 'react-icons/si';
 import { MenuItem } from '@mui/material';
+import {signOut} from 'firebase/auth';
+import {auth} from '../firebase'
+import { AuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const currentUser = useContext(AuthContext)
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
  
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -22,8 +27,16 @@ function Navbar() {
 
   
 
-  const handleCloseUserMenu = () => {
+  function handleCloseUserMenu(setting){
+    if(setting === 'Logout')
+      {
+          signOut(auth);
+      }
     setAnchorElUser(null);
+
+
+
+
   };
     
   return (
@@ -31,6 +44,10 @@ function Navbar() {
     <Container maxWidth="xl"   sx={{display:'flex',alignItems:'center',height:'100%'}}>
     <Toolbar disableGutters>
       <SiArlo id='logo'/>
+
+     
+
+     
         <Typography
           variant="h6"
           noWrap
@@ -50,10 +67,10 @@ function Navbar() {
           Message Mingle
         </Typography>
 
-        <Box sx={{ flexGrow: 0 }}>
+        <Box sx={{ flexGrow: 0 ,ml:'15rem'}}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0}}>
-                <Avatar alt="Remy Sharp" src="https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" sx={{borderRadius:'50%', height:'3.5rem', width:'3.5rem'}}/>
+                <Avatar alt={currentUser.displayName} src={currentUser.photoURL} sx={{borderRadius:'50%', height:'3.5rem', width:'3.5rem'}}/>
               </IconButton>
             </Tooltip>
             <Menu
@@ -73,14 +90,14 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={()=>handleCloseUserMenu(setting)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
-        
+         
       </Toolbar>
     </Container>
   </AppBar>

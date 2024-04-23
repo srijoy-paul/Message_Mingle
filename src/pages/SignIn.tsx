@@ -13,9 +13,11 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../index.css'
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SiArlo } from 'react-icons/si';
 import '../index.css'
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import {auth} from '../firebase'
 
 
 
@@ -25,14 +27,31 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
 
+  const [err, setErr] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit =async  (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
+
+    const email = data.get("email");
+    const password = data.get("password");
+
+
+    try {
+      
+    await  signInWithEmailAndPassword(auth, email, password)
+    navigate('/');
+
+
+    } catch (error) {
+      setErr(error)
+    }
   };
 
   return (
@@ -139,6 +158,7 @@ export default function SignIn() {
               >
                 Sign In
               </Button>
+              {err && <span>something went wrong</span>}
               <Grid container>
                 <Grid item xs>
                   <Link to=''>

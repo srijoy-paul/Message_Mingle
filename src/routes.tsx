@@ -3,10 +3,11 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Home from "./pages/Home"
 import Error from "./pages/Error";
+import ProtectedRoute from './components/ProtectedRoute'
 
 export const router= createBrowserRouter([
 {
-    path:"/",
+    path:"signup",
     element:<SignUp/>
 },
 {
@@ -14,8 +15,9 @@ export const router= createBrowserRouter([
     element:<SignIn/>
 },
 {
-    path:"/message_mingle",
-    element:<Home/>
+   
+    path:"/", 
+    element: (<ProtectedRoute> <Home/> </ProtectedRoute>) 
 },
 {
     path:"/*",
