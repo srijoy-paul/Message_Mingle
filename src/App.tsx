@@ -1,20 +1,8 @@
-import React, { useContext } from 'react'
-import Signin from './pages/SignIn'
-import SignUp from './pages/SignUp'
-import {router} from './routes'
-import { RouterProvider } from 'react-router-dom'
-
-
+import { router } from "./routes";
+import { RouterProvider } from "react-router-dom";
 
 function App() {
-
- 
- 
-  return (
-   
-   
-    <RouterProvider router={router}/>
-   )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

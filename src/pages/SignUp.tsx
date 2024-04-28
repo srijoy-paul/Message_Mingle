@@ -24,65 +24,96 @@ import { doc, setDoc } from "firebase/firestore";
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-
   const [err, setErr] = useState(false);
+  const [username, setUsername] = useState('');
+  const [isValid, setIsValid] = useState({
+    username:true,
+    email:true,
+    password:true,
+  })
+
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+    const {name} = event.target;
+   
+    setUsername(value);
+
+    if(name == 'username')
+      {
+        setIsValid((prevState)=>{
+          return(
+         { ...prevState, username:/^[a-zA-Z][a-zA-Z0-9-_]{3,32}$/.test(value),
+         })
+        });
+      }
+    if(name == 'email')
+      {
+        setIsValid((prevState)=>{
+          return(
+         { ...prevState, email:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi.test(value),
+         })
+        });
+      }
+    if(name == 'password')
+      {
+        setIsValid((prevState)=>{
+          return(
+         { ...prevState, password:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm.test(value),
+         })
+        });
+      }
+    
+    
+   
+  };
+
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-   
 
-    console.log({
-      username: data.get("username"),
-      email: data.get("email"),
-      password: data.get("password"),
-    });
 
-    const displayName = data.get("username");
+    const displayName: string = data.get("username") as string;
 
-    const email = data.get("email");
-    const password = data.get("password");
-    const file = data.get("file");
+    const email: string = data.get("email") as string;
+    const password: string = data.get("password") as string;
+    const file: File= data.get("file") as File;
 
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
       const storageRef = ref(storage, displayName);
-      
 
-      const uploadTask = uploadBytesResumable(storageRef, file); 
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
-      uploadTask.on( 
-        "state_changed",  
-        null,    
+      uploadTask.on(
+        "state_changed",
+        null,
         (error) => {
-        
+          console.log(error);
           setErr(true);
         },
         () => {
-          
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            console.log("File available at", downloadURL);
 
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => { 
-            console.log("File available at", downloadURL); 
-
-           await updateProfile(res.user, {
+            await updateProfile(res.user, {
               displayName,
               photoURL: downloadURL,
             });
 
             // console.log("updatedprofile=",res)
-            
-          await setDoc(doc(db, "users", res.user.uid), {
+
+            await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
               displayName,
               email,
               photoURL: downloadURL,
             });
-           
 
-            await setDoc(doc(db,"userChats", res.user.uid),{});
+            await setDoc(doc(db, "userChats", res.user.uid), {});
             navigate("/");
           });
         }
@@ -182,21 +213,27 @@ export default function SignUp() {
             </Typography>
             <Box
               component="form"
-              noValidate
+             noValidate
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
               <TextField
                 margin="normal"
-                required
+               
                 fullWidth
                 id="username"
                 label="User Name"
                 name="username"
-                autoComplete="username"
+               
                 type="text"
                 className="textfield"
+                required={true}
+                onChange={handleInputChange}
+              
+                error={!isValid.username}
+
               />
+             { !isValid.username &&<span  className="errorMessage">*Username should be 3-16 characters and shouldn't contain any special character!</span>}
               <TextField
                 margin="normal"
                 required
@@ -205,9 +242,13 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 type="email"
-                autoComplete="email"
+               
                 className="textfield"
+                onChange={handleInputChange}
+              
+                error={!isValid.email}
               />
+           {   !isValid.email &&<span  className="errorMessage">*It should be a valid email address! </span>}
               <TextField
                 margin="normal"
                 required
@@ -216,9 +257,13 @@ export default function SignUp() {
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
+               
                 className="textfield"
+                onChange={handleInputChange}
+              
+                error={!isValid.password}
               />
+          {   !isValid.password && <span  className="errorMessage">*Password should be 8-20 characters and include atleast 1 number, 1 letter and 1 special character!</span>}
               <TextField
                 margin="normal"
                 required

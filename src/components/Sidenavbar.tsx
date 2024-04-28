@@ -13,11 +13,11 @@ import { MenuItem } from '@mui/material';
 import {signOut} from 'firebase/auth';
 import {auth} from '../firebase'
 import { AuthContext } from '../context/AuthContext';
-import { useContext } from 'react';
+import { useContext ,useState} from 'react';
 
 function Navbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  // const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const currentUser = useContext(AuthContext)
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
  
@@ -27,7 +27,7 @@ function Navbar() {
 
   
 
-  function handleCloseUserMenu(setting){
+  function handleCloseUserMenu(setting:string){
     if(setting === 'Logout')
       {
           signOut(auth);

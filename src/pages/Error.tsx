@@ -1,9 +1,5 @@
-import React from 'react'
-
 function Error() {
-  return (
-    <div>Error</div>
-  )
+  return <h1>Page Not Found</h1>;
 }
 
-export default Error
+export default Error;

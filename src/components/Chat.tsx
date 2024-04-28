@@ -1,18 +1,15 @@
-import React from 'react'
-import ChatNavbar from './ChatNavbar'
-import Message from './Message'
-import Input from './Input'
+import ChatNavbar from "./ChatNavbar";
+import Messages from "./Messages";
+import Input from "./Input";
 
 function Chat() {
   return (
-   
     <>
-    <ChatNavbar/>
-      <Message/>
-      <Input/>
+      <ChatNavbar />
+      <Messages />
+      <Input />
     </>
-  
-  )
+  );
 }
 
-export default Chat
+export default Chat;

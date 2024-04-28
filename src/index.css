@@ -79,10 +79,7 @@
 /* sx={{maxWidth:'100%', p:'10px',mt:3, display:'flex',gap:3}} */
 /* sx={{bgcolor:'#fff', width:'40%', display:'flex',alignItems:'center',p:2}} */
 
-.textfield [name='email']
-{
-  outline-color: red;
-}
+
 
  #avatar{
   display: flex;
@@ -99,3 +96,14 @@
 #avatar:hover{
  border: 1px solid black;
 }
+
+ span.errorMessage{
+  color:red;
+ 
+
+}
+/* 
+.textfield:invalid ~ span{
+display:block;
+color:green;
+}  */
