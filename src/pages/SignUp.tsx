@@ -25,18 +25,19 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const [err, setErr] = useState(false);
-  const [username, setUsername] = useState('');
+  const [focuse, setFocused]=useState(false);
+ 
   const [isValid, setIsValid] = useState({
     username:true,
     email:true,
     password:true,
   })
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event:any) => {
     const { value } = event.target;
     const {name} = event.target;
    
-    setUsername(value);
+    
 
     if(name == 'username')
       {
@@ -66,6 +67,10 @@ export default function SignUp() {
     
    
   };
+
+  const handleFocus = ()=>{
+    setFocused(true);
+  }
 
   const navigate = useNavigate();
 
@@ -229,8 +234,10 @@ export default function SignUp() {
                 className="textfield"
                 required={true}
                 onChange={handleInputChange}
-              
+                onBlur={handleFocus}
+                autoFocus = {focuse}
                 error={!isValid.username}
+
 
               />
              { !isValid.username &&<span  className="errorMessage">*Username should be 3-16 characters and shouldn't contain any special character!</span>}
@@ -242,13 +249,14 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 type="email"
-               
+                onBlur={handleFocus}
                 className="textfield"
                 onChange={handleInputChange}
-              
+                focused= {focuse}  
                 error={!isValid.email}
               />
            {   !isValid.email &&<span  className="errorMessage">*It should be a valid email address! </span>}
+
               <TextField
                 margin="normal"
                 required
@@ -257,10 +265,10 @@ export default function SignUp() {
                 label="Password"
                 type="password"
                 id="password"
-               
+                onBlur={handleFocus}
                 className="textfield"
                 onChange={handleInputChange}
-              
+                focused = {focuse}
                 error={!isValid.password}
               />
           {   !isValid.password && <span  className="errorMessage">*Password should be 8-20 characters and include atleast 1 number, 1 letter and 1 special character!</span>}

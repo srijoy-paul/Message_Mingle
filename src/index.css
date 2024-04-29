@@ -102,8 +102,8 @@
  
 
 }
-/* 
-.textfield:invalid ~ span{
+
+.textfield [autoFocus = true] ~ span{
 display:block;
-color:green;
-}  */
+
+} 
