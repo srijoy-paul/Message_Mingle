@@ -1,7 +1,7 @@
 import { Box } from "@mui/system";
 import { SetStateAction, useContext, useEffect, useState } from "react";
 import "../index.css";
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, Hidden, Typography } from "@mui/material";
 import { doc, onSnapshot } from "firebase/firestore";
 import { AuthContext } from "../context/AuthContext";
 import { db } from "../firebase";
@@ -38,7 +38,7 @@ function Chats() {
   }
 
   return (
-    <Box id="chat-container" sx={{ height: "80%", m: 2, overflowY: "scroll" }}>
+    <Box id="chat-container" sx={{ height: {lg:"80%", xs:'30%'}, m: {lg:2,xs:0}, overflowY: {lg:"scroll" }, width:{xs:'100%'},display:{xs:'flex',lg:'block'} }}>
       {Object?.entries(chats)?.sort((a:any,b:any)=>{ return b[1].date - a[1].date}).map((chat:any)=>{ 
         return(
         <Box
@@ -48,22 +48,28 @@ function Chats() {
         onClick={()=>handleSelect(chat[1]?.userInfo)}
       >
         <Avatar
-          alt="Remy Sharp"
+          alt=""
           src={chat[1]?.userInfo.photoURL}
-          sx={{ borderRadius: "50%", height: "4.5rem", width: "4.5rem" }}
+          sx={{ borderRadius:'50% ' ,width:{ lg:"4rem", sm:'3.5'},  height:{
+            
+            lg:'4rem',
+            sm:'3.5rem',
+          }}}
         />
-
+      <Hidden mdDown>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Typography variant="h6" sx={{ color: "#fff" }}>
+          <Typography variant="h6" sx={{ color: "#fff",fontSize:{lg:'25px', sm:'22px'}}}>
             {chat[1]?.userInfo.displayName}
             
           </Typography>
-          <Typography variant="h6" sx={{ color: "#fff" }}>
+          <Typography variant="h6" sx={{ color: "#E8DFCA", fontSize:{lg:'20px', sm:'18px'} }}>
             {/* {chat[1].userInfo.lastMessage?.text} */}
             {chat[1]?.lastMessage?.text}
           </Typography>
         </Box>
-      </Box>)
+        </Hidden>
+      </Box>
+      )
       })}
       
     </Box>

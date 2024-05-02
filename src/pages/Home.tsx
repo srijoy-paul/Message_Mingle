@@ -1,36 +1,48 @@
 import Sidebar from "../components/Sidebar";
 import Chat from "../components/Chat";
-import { Grid } from "@mui/material";
+import { Grid ,Box} from "@mui/material";
 import "../index.css";
 
 function Home() {
   return (
     <>
-      <Grid container spacing={1} sx={{ height: "100vh" }}>
-        <Grid
-          item
-          xs={4}
+
+      <Box  sx={{ display:'flex',height: "100vh", flexDirection:{md:'row', sm:'column',xs:'column'}, }}>
+        <Box
+          
+        
+        
           sx={{
             bgcolor: "var(--second-color)",
-            overflowY: "hidden",
-            height: "100%",
+           
+            height: {md:"100%", xs:'20%'},
+            width:{md:'30%',xs:'100%'},
+            
+           
+           
+           
+            
           }}
         >
           <Sidebar />
-        </Grid>
+        </Box>
 
-        <Grid
-          item
-          xs={8}
+        <Box
+          
+          
           sx={{
             bgcolor: "var(--light-color)",
-            overflowY: "hidden",
-            height: "100%",
+           
+            height: {md:"100%",xs:'80%'},
+        
+           
+            width:{md:'70%',xs:'100%'},
           }}
         >
           <Chat />
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
+    
     </>
   );
 }

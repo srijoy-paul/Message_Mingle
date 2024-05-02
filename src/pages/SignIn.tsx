@@ -53,13 +53,15 @@ export default function SignIn() {
         sx={{
           height: "75vh",
           width: "80vw",
-          m: 10,
-          ml: 20,
-          mt: 13,
+         
           position: "relative",
           overflow: "hidden",
           boxShadow:
             "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
+            margin:{
+              xs: " 6rem auto",
+              lg: '6rem auto'
+            }
         }}
       >
         <CssBaseline />
@@ -69,31 +71,48 @@ export default function SignIn() {
           sx={{
             bgcolor: "rgb(6,0,0)",
             height: { xs: "100vh", lg: "100%" },
-            width: "58.5%",
+           
             color: "#fff",
             position: "absolute",
             top: 0,
             left: "-100%",
             opacity: "0.7",
             transition: "1s",
-            display: "flex",
+           
             justifyContent: "center",
 
             fontSize: 35,
+            width:{
+              lg:"58.5%",
+            
+              
+
+            },
+            display:{
+              xs:'none',
+              lg:'flex',
+              sm:'none'
+            }
           }}
         >
           <Box
             sx={{
-              border: "2px solid red",
+              
               width: "70%",
               height: "70%",
-              display: "flex",
-              justifyContent: "center",
-              mt: 10,
+              // display: "flex",
+              // justifyContent: "center",
+              m:'auto',
+              textAlign:'center',
+              pt:'2rem'
             }}
           >
-            <Box sx={{ mr: 3 }}>{<SiArlo />}</Box>
-            <Box sx={{ color: "var(--main-color)", mr: 1 }}>Message</Box> Mingle
+              <Box sx={{ fontSize:'35px'}}>Welcome Back!</Box>
+            <Box >{<SiArlo />}</Box>
+            <Box sx={{ color: "var(--main-color)"}}>Message  Mingle</Box>
+            <Box sx={{fontSize:'25px', mt:'25px'}}> "Join the conversation! Sign in and discover a world of connections waiting for you. Your journey begins with just a click –let's mingle!"</Box>
+
+
           </Box>
         </Box>
         <Grid
@@ -156,10 +175,10 @@ export default function SignIn() {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
-              />
+              /> */}
               <Button
                 type="submit"
                 fullWidth
@@ -183,7 +202,7 @@ export default function SignIn() {
                   <Link to="">Forgot password?</Link>
                 </Grid>
                 <Grid item>
-                  <Link to="/">{"Don't have an account? Sign Up"}</Link>
+                  <Link to="/signup">Don't have an account? Sign Up</Link>
                 </Grid>
               </Grid>
             </Box>

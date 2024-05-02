@@ -9,13 +9,14 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import { SiArlo } from 'react-icons/si';
-import { MenuItem } from '@mui/material';
+import { Hidden, MenuItem } from '@mui/material';
 import {signOut} from 'firebase/auth';
 import {auth} from '../firebase'
 import { AuthContext } from '../context/AuthContext';
 import { useContext ,useState} from 'react';
 
-function Navbar() {
+
+function Sidenavbar() {
   // const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const currentUser = useContext(AuthContext)
@@ -40,25 +41,26 @@ function Navbar() {
   };
     
   return (
-    <AppBar position="static"  sx={{height:'10%', bgcolor:'var(--main-color)'}}>
-    <Container maxWidth="xl"   sx={{display:'flex',alignItems:'center',height:'100%'}}>
-    <Toolbar disableGutters>
-      <SiArlo id='logo'/>
+    <AppBar position="static"  sx={{height:{xs:'30%',lg:'10%'}, bgcolor:'var(--main-color)'}}>
+    <Container maxWidth="xl"   sx={{display:'flex',alignItems:'center',height:'100%',justifyContent:{sm:'space-between'},  }}>
+    <Toolbar disableGutters sx={{  width:'100%', }}>
+      <SiArlo id='logo' />
 
      
+      <Box sx={{display:'flex', justifyContent:{lg:'space-between', md:'end', xs:'end'}, alignItems:'center', width:{lg:'100%', md:'80%', xs:'100%' }}}>
 
-     
         <Typography
           variant="h6"
           noWrap
-          component="a"
+         
           // href="#app-bar-with-responsive-menu"
           sx={{
             mr: 2,
             ml:2,
             display: { xs: 'none', md: 'flex' },
             fontFamily:'sans-serif',
-            fontWeight: 700,
+            fontWeight: 700, 
+            // fontsize:{lg:'35px', xs:'50px'},
             letterSpacing: '.2rem',
             color: 'inherit',
             textDecoration: 'none',
@@ -66,11 +68,12 @@ function Navbar() {
         >
           Message Mingle
         </Typography>
+       
 
-        <Box sx={{ flexGrow: 0 ,ml:'15rem'}}>
+        <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0}}>
-                <Avatar alt={currentUser.displayName} src={currentUser.photoURL} sx={{borderRadius:'50%', height:'3.5rem', width:'3.5rem'}}/>
+                <Avatar alt={currentUser.displayName} src={currentUser.photoURL} sx={{borderRadius:'50%', height:{lg:'3.5rem', xs:'2rem'}, width:{lg:'3.5rem', xs:'2rem'}}}/>
               </IconButton>
             </Tooltip>
             <Menu
@@ -96,7 +99,7 @@ function Navbar() {
               ))}
             </Menu>
           </Box>
-
+          </Box>
          
       </Toolbar>
     </Container>
@@ -104,4 +107,4 @@ function Navbar() {
   )
 }
 
-export default Navbar
+export default Sidenavbar

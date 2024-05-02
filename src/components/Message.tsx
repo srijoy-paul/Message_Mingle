@@ -22,10 +22,11 @@ function Message({message}:Props) {
 <>
     <Box className={`message ${message.senderId === currentUser.uid && 'ownermessg'}`} ref={myRef} >
     
-    <Avatar alt="Remy Sharp" src={message.senderId === currentUser.uid? currentUser.photoURL : data.user.photoURL} sx={{borderRadius:'50%', height:'3.5rem', width:'3.5rem'}}/>
+    <Avatar alt="Remy Sharp" src={message.senderId === currentUser.uid? currentUser.photoURL : data.user.photoURL} sx={{borderRadius:'50%', height:{lg:'3.5rem',xs:'2rem'}, width:{lg:'3.5rem',xs:'2rem'}}}/>
 
-    <Box className='messgContent' >
-      <Typography variant='h6'>{message.text}</Typography>
+    <Box className='messgContent' sx={{ p:{xs:'5px'},}}>
+      <Typography variant='h6' sx={{pl:'10px', fontSize:{xs:'15px'}, display:'flex', flexWrap:'wrap', width:'60px'}}>{message.text}</Typography>
+
      { message.img && <img src={message.img} height='50px' width='50px'/>}
     </Box>
 

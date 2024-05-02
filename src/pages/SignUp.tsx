@@ -25,7 +25,12 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const [err, setErr] = useState(false);
-  const [focuse, setFocused]=useState(false);
+  const [focuse, setFocused]=useState({
+    username:false,
+    email:false,
+    password:false,
+    file:false,
+  });
  
   const [isValid, setIsValid] = useState({
     username:true,
@@ -68,8 +73,46 @@ export default function SignUp() {
    
   };
 
-  const handleFocus = ()=>{
-    setFocused(true);
+
+  const handleFocus = (event:any)=>{
+   
+    const {name} = event.target;
+    if(name == 'username')
+      {
+        setFocused((prevState)=>{
+          return(
+         { ...prevState, username:true,
+         })
+        });
+      }
+
+      if(name == 'email')
+        {
+          setFocused((prevState)=>{
+            return(
+           { ...prevState, email:true,
+           })
+          });
+        }
+
+        if(name == 'password')
+          {
+            setFocused((prevState)=>{
+              return(
+             { ...prevState, password:true,
+             })
+            });
+          }
+
+          if(name == 'file')
+            {
+              setFocused((prevState)=>{
+                return(
+               { ...prevState, file:true,
+               })
+              });
+            }
+   
   }
 
   const navigate = useNavigate();
@@ -137,13 +180,16 @@ export default function SignUp() {
         sx={{
           height: "75%",
           width: "80%",
-          m: 10,
-          ml: 20,
-          mt: 13,
+         
           position: "relative",
           overflow: "hidden",
           boxShadow:
             "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
+          
+            margin:{
+              xs: " 6rem auto",
+              lg: '6rem auto'
+            }
         }}
       >
         <CssBaseline />
@@ -153,31 +199,48 @@ export default function SignUp() {
           sx={{
             bgcolor: "rgb(6,0,0)",
             height: { xs: "100vh", lg: "100%" },
-            width: "58.5%",
+           
             color: "#fff",
             position: "absolute",
             top: 0,
             left: "-100%",
             opacity: "0.7",
             transition: "1s",
-            display: "flex",
+           
             justifyContent: "center",
             alignItems: "center",
 
             fontSize: 35,
+        
+            width:{
+              lg:"58.5%",
+            
+              
+
+            },
+            display:{
+              xs:'none',
+              lg:'flex',
+              sm:'none'
+            }
           }}
         >
           <Box
             sx={{
-              border: "2px solid red",
+              
               width: "70%",
               height: "70%",
-              display: "flex",
-              justifyContent: "center",
+              // display: "flex",
+              // justifyContent: "center",
+              m:'auto',
+              textAlign:'center',
+              pt:'2rem'
             }}
           >
-            <Box sx={{ mr: 3 }}>{<SiArlo />}</Box>
-            <Box sx={{ color: "var(--main-color)", mr: 1 }}>Message</Box> Mingle
+            <Box sx={{ fontSize:'35px'}}>Welcome to </Box>
+            <Box >{<SiArlo />}</Box>
+            <Box sx={{ color: "var(--main-color)"}}>Message  Mingle</Box>
+            <Box sx={{fontSize:'25px', mt:'25px'}}> " Where Every Interaction Counts! Discover a world of connections, tailored just for you. Join us and make every chat a special moment."</Box>
           </Box>
         </Box>
 
@@ -207,6 +270,7 @@ export default function SignUp() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              border:'2px solid red',
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "var(--main-color)" }}>
@@ -218,7 +282,7 @@ export default function SignUp() {
             </Typography>
             <Box
               component="form"
-             noValidate
+             
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
@@ -235,12 +299,12 @@ export default function SignUp() {
                 required={true}
                 onChange={handleInputChange}
                 onBlur={handleFocus}
-                autoFocus = {focuse}
+              
                 error={!isValid.username}
 
 
               />
-             { !isValid.username &&<span  className="errorMessage">*Username should be 3-16 characters and shouldn't contain any special character!</span>}
+             { !isValid.username && focuse.username && <span  className="errorMessage">*Username should be 3-16 characters and shouldn't contain any special character!</span>}
               <TextField
                 margin="normal"
                 required
@@ -252,10 +316,10 @@ export default function SignUp() {
                 onBlur={handleFocus}
                 className="textfield"
                 onChange={handleInputChange}
-                focused= {focuse}  
+                
                 error={!isValid.email}
               />
-           {   !isValid.email &&<span  className="errorMessage">*It should be a valid email address! </span>}
+           {   !isValid.email && focuse.email && <span  className="errorMessage">*It should be a valid email address! </span>}
 
               <TextField
                 margin="normal"
@@ -268,10 +332,10 @@ export default function SignUp() {
                 onBlur={handleFocus}
                 className="textfield"
                 onChange={handleInputChange}
-                focused = {focuse}
+                
                 error={!isValid.password}
               />
-          {   !isValid.password && <span  className="errorMessage">*Password should be 8-20 characters and include atleast 1 number, 1 letter and 1 special character!</span>}
+          {   !isValid.password && focuse.password && <span  className="errorMessage">*Password should be 8-20 characters and include atleast 1 capital letter, 1 number, 1 letter and 1 special character!</span>}
               <TextField
                 margin="normal"
                 required
@@ -282,11 +346,16 @@ export default function SignUp() {
                 autoComplete="file"
                 className="textfield"
                 sx={{ display: "none" }}
+                onBlur={handleFocus}
+               
               />
+
               <label htmlFor="file" id="avatar">
                 <img src={Add} alt="image" height="45px" width="45px" />{" "}
                 <span style={{ color: "gray" }}>Add your Profile image</span>
               </label>
+              {    focuse.file && <span  className="errorMessage">*give your profile image!</span>}
+
 
               <Button
                 type="submit"
@@ -295,7 +364,7 @@ export default function SignUp() {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  p: 4,
+                  p: 3,
                   fontSize: 20,
                   backgroundColor: "var(--main-color)",
                   "&:hover": {
@@ -311,9 +380,16 @@ export default function SignUp() {
                   <Link to="">Forgot password?</Link>
                 </Grid>
                 <Grid item>
-                  <Link to="/signin">{"Already have an account? Sign In"}</Link>
+                  <Link to="/signin">Already have an account? Sign In</Link>
                 </Grid>
               </Grid>
+                <Box sx={{display:'flex',justifyContent:'center',position: 'relative'}}>
+                <div id='line'></div>
+                <span id='or'>or</span> 
+                
+                </Box>
+            
+              
             </Box>
           </Box>
         </Grid>

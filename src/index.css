@@ -6,6 +6,11 @@
   
 }
 
+*{
+  margin:0;
+  padding:0;
+}
+
  #mainCard:hover #hoverEfft{ 
   left:0;
   
@@ -99,11 +104,29 @@
 
  span.errorMessage{
   color:red;
+ }
+
+ #or{
+  font-size: 15px;
+  border:2px solid var(--main-color);
+  padding: 1px 6px;
+  border-radius: 40%;
+z-index: 1;
+  background-color: white;
  
 
-}
+ }
+ #line{
+  position: absolute;
+  content: "";
+  height: 1px;
+  width:90%;
+  background-color: gray;
+  top:12px;
 
-.textfield [autoFocus = true] ~ span{
-display:block;
+  
+  
+ }
+ 
+ 
 
-} 

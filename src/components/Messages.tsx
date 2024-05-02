@@ -28,7 +28,7 @@ function Messages() {
 
 
   return (
-    <Box id='messgContainer' sx={{height:'80%',ml:3,mr:2}}>
+    <Box id='messgContainer' sx={{height:{xs:'80%',lg:'81%'},ml:3,mr:2}}>
 
       {messages.map((m:any)=>{
       return(
