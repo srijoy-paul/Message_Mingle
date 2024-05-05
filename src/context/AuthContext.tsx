@@ -9,9 +9,13 @@ type Props = { children: React.ReactNode };
 export const AuthContextProvider = ({ children }: Props) => {
   const [currentUser, setCurrentUser] = useState({});
 
+
   useEffect(() => {
+    console.log('auth=',auth)
     const unsub = onAuthStateChanged(auth, (user: any) => {
-      setCurrentUser(user);
+     
+      setCurrentUser(user.auth.currentUser);
+     
     });
 
     return () => {

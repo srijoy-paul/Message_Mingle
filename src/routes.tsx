@@ -4,6 +4,7 @@ import SignIn from "./pages/SignIn";
 import Home from "./pages/Home"
 import Error from "./pages/Error";
 import ProtectedRoute from './components/ProtectedRoute'
+import Forgotpassword from "./pages/Forgotpassword";
 
 export const router= createBrowserRouter([
 {
@@ -18,6 +19,11 @@ export const router= createBrowserRouter([
    
     path:"/", 
     element: (<ProtectedRoute> <Home/> </ProtectedRoute>) 
+},
+{
+   
+    path:"/forgotpassword", 
+    element: <Forgotpassword/>
 },
 {
     path:"/*",

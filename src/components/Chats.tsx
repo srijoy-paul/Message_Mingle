@@ -7,27 +7,33 @@ import { AuthContext } from "../context/AuthContext";
 import { db } from "../firebase";
 import {ChatContext} from '../context/ChatContext'
 
+
 function Chats() {
   const [chats, setChats] = useState<SetStateAction<any>>([]);
 
   const currentUser = useContext(AuthContext);
   const {dispatch} = useContext(ChatContext);
  
-  console.log('chats=',chats)
+  console.log('chats=',chats, currentUser.uid)
 
-  useEffect(() => {
-    const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", currentUser?.uid), (doc) => {
-       console.log('doc=',doc.data())
-        setChats(doc.data());
-       
-
-        return () => {
-          unsub();
+    useEffect(() => {
+      try {
+        const getChats = () => {
+          const unsub = onSnapshot(doc(db, "userChats", currentUser?.uid), (docs) => {
+           console.log('doc=',docs.data())
+            setChats(docs.data());
+           
+    
+            return () => {
+              unsub();
+            };
+          });
         };
-      });
-    };
-    currentUser.uid && getChats();
+        currentUser.uid && getChats();
+      } catch (error) {
+        console.log("error",error)
+      }
+   
   }, [currentUser.uid]);
 
   // console.log("chats=",Object.entries(chats))
@@ -39,7 +45,9 @@ function Chats() {
 
   return (
     <Box id="chat-container" sx={{ height: {lg:"80%", xs:'30%'}, m: {lg:2,xs:0}, overflowY: {lg:"scroll" }, width:{xs:'100%'},display:{xs:'flex',lg:'block'} }}>
+      
       {Object?.entries(chats)?.sort((a:any,b:any)=>{ return b[1].date - a[1].date}).map((chat:any)=>{ 
+        console.log('chat=', chat)
         return(
         <Box
         className="user"

@@ -13,7 +13,7 @@ export const ChatContext = createContext<{
     data: StateType;
     dispatch: Dispatch<ActionType>;
   }>({
-    data: {user:{}, chatId:""}, // Initial state
+    data: {user:{}, chatId:"", uid:''}, // Initial state
     dispatch: () => {}, // Initial dispatch function
   });
 

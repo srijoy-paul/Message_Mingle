@@ -15,13 +15,90 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { SiArlo } from "react-icons/si";
 import "../index.css";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import GoogleIcon from '@mui/icons-material/Google';
+
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
   const [err, setErr] = useState(false);
+
+  const [isValid, setIsValid] = useState({
+    username:true,
+    email:true,
+    password:true,
+  })
+
+  const [focuse, setFocused]=useState({
+    username:false,
+    email:false,
+    password:false,
+  
+  });
+  
+  const [user] = useAuthState(auth);
+ 
+
+  const signInWithGoogle = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+    }
+  };
+
+
+  React.useEffect(()=>{
+    console.log('user=', user);
+  },[user])
+
+  const handleInputChange =(event: React.ChangeEvent<HTMLInputElement>)=>{
+    const {value} = event.target;
+    const {name} = event.target;
+
+    if(name == 'email')
+      {
+        setIsValid((prevState)=>{
+          return(
+         { ...prevState, email:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi.test(value),
+         })
+        });
+      }
+    if(name == 'password')
+      {
+        setIsValid((prevState)=>{
+          return(
+         { ...prevState, password:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm.test(value),
+         })
+        });
+      }
+    
+  }
+
+  const handleFocus = (event:React.FocusEvent<HTMLInputElement>)=>{
+    const {name} = event.target;
+    if(name == 'email')
+      {
+        setFocused((prevState)=>{
+          return(
+         { ...prevState, email:true,
+         })
+        });
+      }
+
+      if(name == 'password')
+        {
+          setFocused((prevState)=>{
+            return(
+           { ...prevState, password:true,
+           })
+          });
+        }
+  }
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -151,7 +228,7 @@ export default function SignIn() {
             </Typography>
             <Box
               component="form"
-              noValidate
+             
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
@@ -162,9 +239,12 @@ export default function SignIn() {
                 id="email"
                 label="Email Address"
                 name="email"
-                autoComplete="email"
+                onBlur={handleFocus}
                 sx={{ borderColor: "var(--main-color)" }}
+                onChange={handleInputChange}
               />
+              {   !isValid.email && focuse.email && <span  className="errorMessage">*It should be a valid email address! </span>}
+
               <TextField
                 margin="normal"
                 required
@@ -173,8 +253,11 @@ export default function SignIn() {
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
+                onBlur={handleFocus}
+                onChange={handleInputChange}
+                // autoComplete="current-password"
               />
+                 {   !isValid.password && focuse.password && <span  className="errorMessage">*Password should be 8-20 characters and include atleast 1 capital letter, 1 number, 1 letter and 1 special character!</span>}
               {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -196,15 +279,26 @@ export default function SignIn() {
               >
                 Sign In
               </Button>
-              {err && <span>something went wrong</span>}
+              {err && <span>Email not exist, please do signup</span>}
               <Grid container>
                 <Grid item xs>
-                  <Link to="">Forgot password?</Link>
+                  <Link to="/forgotpassword">Forgot password?</Link>
                 </Grid>
                 <Grid item>
                   <Link to="/signup">Don't have an account? Sign Up</Link>
                 </Grid>
               </Grid>
+
+              <Box sx={{display:'flex',justifyContent:'center',position: 'relative'}}>
+                <div id='line'></div>
+                <span id='or'>or</span> 
+                
+                </Box>
+
+                <Box sx={{display:'flex', justifyContent:'center', my:3}}>
+                <button onClick={signInWithGoogle} style={{border:'none', cursor:'pointer'}}><GoogleIcon sx={{color:'var(--main-color)'}}/></button>
+                </Box>
+                
             </Box>
           </Box>
         </Grid>

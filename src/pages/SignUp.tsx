@@ -15,30 +15,60 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../index.css";
 import { Link } from "react-router-dom";
 import { SiArlo } from "react-icons/si";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../firebase";
+import { createUserWithEmailAndPassword, updateProfile,signInWithPopup } from "firebase/auth";
+import { auth , googleProvider} from "../firebase";
 import { storage, db } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import GoogleIcon from '@mui/icons-material/Google';
+
+import { nanoid } from "nanoid";
+
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
   const [err, setErr] = useState(false);
-  const [focuse, setFocused]=useState({
-    username:false,
-    email:false,
-    password:false,
-    file:false,
-  });
- 
+
   const [isValid, setIsValid] = useState({
     username:true,
     email:true,
     password:true,
   })
 
-  const handleInputChange = (event:any) => {
+  const [focuse, setFocused]=useState({
+    username:false,
+    email:false,
+    password:false,
+  
+  });
+
+  // google authentication
+
+  const [user] = useAuthState(auth);
+
+  const signInWithGoogle = async () => {
+    try {
+      const userdata = await signInWithPopup(auth, googleProvider);
+      
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+    }
+  };
+
+
+  React.useEffect(()=>{
+    console.log('users=', user);
+  },[user])
+
+
+  
+ 
+  
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     const {name} = event.target;
    
@@ -72,9 +102,9 @@ export default function SignUp() {
     
    
   };
+  
 
-
-  const handleFocus = (event:any)=>{
+  const handleFocus = (event:React.FocusEvent<HTMLInputElement>)=>{
    
     const {name} = event.target;
     if(name == 'username')
@@ -104,14 +134,7 @@ export default function SignUp() {
             });
           }
 
-          if(name == 'file')
-            {
-              setFocused((prevState)=>{
-                return(
-               { ...prevState, file:true,
-               })
-              });
-            }
+         
    
   }
 
@@ -122,7 +145,7 @@ export default function SignUp() {
 
     const data = new FormData(event.currentTarget);
 
-
+  
     const displayName: string = data.get("username") as string;
 
     const email: string = data.get("email") as string;
@@ -131,9 +154,11 @@ export default function SignUp() {
 
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-
-      const storageRef = ref(storage, displayName);
-
+     console.log('res=', res)
+      const token = nanoid()
+  
+      const storageRef = ref(storage,displayName + '_' + token);
+    
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on(
@@ -145,14 +170,14 @@ export default function SignUp() {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            console.log("File available at", downloadURL);
+            // console.log("File available at", downloadURL);
 
             await updateProfile(res.user, {
               displayName,
               photoURL: downloadURL,
             });
-
-            // console.log("updatedprofile=",res)
+            
+           
 
             await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
@@ -166,7 +191,9 @@ export default function SignUp() {
           });
         }
       );
+    
     } catch (error) {
+      console.log(error)
       setErr(true);
     }
   };
@@ -270,7 +297,7 @@ export default function SignUp() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              border:'2px solid red',
+             
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "var(--main-color)" }}>
@@ -344,9 +371,9 @@ export default function SignUp() {
                 type="file"
                 id="file"
                 autoComplete="file"
-                className="textfield"
+                // className="textfield"
                 sx={{ display: "none" }}
-                onBlur={handleFocus}
+              
                
               />
 
@@ -354,7 +381,7 @@ export default function SignUp() {
                 <img src={Add} alt="image" height="45px" width="45px" />{" "}
                 <span style={{ color: "gray" }}>Add your Profile image</span>
               </label>
-              {    focuse.file && <span  className="errorMessage">*give your profile image!</span>}
+          
 
 
               <Button
@@ -374,21 +401,25 @@ export default function SignUp() {
               >
                 Sign up
               </Button>
-              {err && <span>something went wrong</span>}
+              {err && <span>Email is already in use</span>}
               <Grid container>
-                <Grid item xs>
-                  <Link to="">Forgot password?</Link>
-                </Grid>
+                
                 <Grid item>
                   <Link to="/signin">Already have an account? Sign In</Link>
                 </Grid>
               </Grid>
-                <Box sx={{display:'flex',justifyContent:'center',position: 'relative'}}>
+
+                <Box sx={{display:'flex',justifyContent:'center',position: 'relative', mt:2}}>
                 <div id='line'></div>
                 <span id='or'>or</span> 
                 
                 </Box>
-            
+
+                <Box sx={{display:'flex', justifyContent:'center', my:3}}>
+                <button onClick={ signInWithGoogle} style={{border:'none', cursor:'pointer'  }}><GoogleIcon sx={{color:'var(--main-color)'}}/> </button>
+                </Box>
+             
+                
               
             </Box>
           </Box>
