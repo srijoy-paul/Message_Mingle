@@ -11,6 +11,7 @@ function Home() {
           display: "flex",
           height: "100vh",
           flexDirection: { md: "row", sm: "column", xs: "column" },
+        
         }}
       >
         <Box
@@ -19,6 +20,7 @@ function Home() {
 
             height: { md: "100%", xs: "20%" },
             width: { md: "30%", xs: "100%" },
+           
           }}
         >
           <Sidebar />

@@ -3,10 +3,14 @@ import App from "./App.tsx";
 import { AuthContextProvider } from "./context/AuthContext.tsx";
 import { ChatContextProvider } from "./context/ChatContext.tsx";
 
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
+
   <AuthContextProvider>
     <ChatContextProvider>
+      
       <App />
+      
     </ChatContextProvider>
   </AuthContextProvider>
 );

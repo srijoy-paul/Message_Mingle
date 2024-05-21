@@ -127,6 +127,62 @@ z-index: 1;
   
   
  }
+ .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(6,0,0);
+  opacity:0.7;
+  z-index: 1;
+}
+.userinfo{
+  border: none;
+  outline: none;
+  padding: 10px;
+  
+  background-color: transparent;
+  /* border-bottom: 4px solid black; */
+  font-size: 25px;
+}
+.overlayImg {
  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(0, 0, 0);
+  /* opacity:0.9; */
+  z-index: 3;
+}
+.profileimg{
+  height:30rem;
+  width:30rem;
+}
+
+#profilephoto:hover #profileimghover{
+left:0;
+}
+
+.overlayCamera {
+ position: absolute;
+  top: 0;
+  left: 0; 
+  width: 100vw;
+  height: 100vh;
+ 
+  background-color: rgba(6, 0, 0, 0.725);
+  /* opacity:0.9; */
+  /* opacity:0.3; */
+  z-index: 3;
+  display:block;
+
+}
+.cameraNotactive{
+  display:none;
+}
+
  
 

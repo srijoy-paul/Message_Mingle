@@ -1,4 +1,4 @@
-import { Avatar, Box, Hidden, InputAdornment, InputBase, Paper } from "@mui/material";
+import { Avatar, Box,InputAdornment, InputBase, Paper } from "@mui/material";
 import { SetStateAction, useContext, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { db } from "../firebase";

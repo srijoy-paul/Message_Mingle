@@ -15,16 +15,19 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../index.css";
 import { Link } from "react-router-dom";
 import { SiArlo } from "react-icons/si";
-import { createUserWithEmailAndPassword, updateProfile,signInWithPopup } from "firebase/auth";
-import { auth , googleProvider} from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth, googleProvider } from "../firebase";
 import { storage, db } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
-import { useAuthState } from 'react-firebase-hooks/auth';
-import GoogleIcon from '@mui/icons-material/Google';
+import { useAuthState } from "react-firebase-hooks/auth";
+import GoogleIcon from "@mui/icons-material/Google";
 
 import { nanoid } from "nanoid";
-
 
 const defaultTheme = createTheme();
 
@@ -32,16 +35,15 @@ export default function SignUp() {
   const [err, setErr] = useState(false);
 
   const [isValid, setIsValid] = useState({
-    username:true,
-    email:true,
-    password:true,
-  })
+    username: true,
+    email: true,
+    password: true,
+  });
 
-  const [focuse, setFocused]=useState({
-    username:false,
-    email:false,
-    password:false,
-  
+  const [focuse, setFocused] = useState({
+    username: false,
+    email: false,
+    password: false,
   });
 
   // google authentication
@@ -51,92 +53,81 @@ export default function SignUp() {
   const signInWithGoogle = async () => {
     try {
       const userdata = await signInWithPopup(auth, googleProvider);
+      console.log("userData", userdata);
       
+      await setDoc(doc(db, "users", userdata.user.uid), {
+        uid: userdata.user.uid,
+        displayName: userdata.user.displayName,
+        email: userdata.user.email,
+        photoURL: userdata.user.photoURL,
+      });
+
+      await setDoc(doc(db, "userChats", userdata.user.uid), {});
+      
+
       navigate("/");
     } catch (error) {
       console.error("Error signing in with Google:", error);
     }
   };
 
-
-  React.useEffect(()=>{
-    console.log('users=', user);
-  },[user])
-
-
+  React.useEffect(() => {
+    
+    console.log("users=", user);
   
- 
-  
+  }, [user]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const {name} = event.target;
-   
-    
+    const { name } = event.target;
 
-    if(name == 'username')
-      {
-        setIsValid((prevState)=>{
-          return(
-         { ...prevState, username:/^[a-zA-Z][a-zA-Z0-9-_]{3,32}$/.test(value),
-         })
-        });
-      }
-    if(name == 'email')
-      {
-        setIsValid((prevState)=>{
-          return(
-         { ...prevState, email:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi.test(value),
-         })
-        });
-      }
-    if(name == 'password')
-      {
-        setIsValid((prevState)=>{
-          return(
-         { ...prevState, password:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm.test(value),
-         })
-        });
-      }
-    
-    
-   
+    if (name == "username") {
+      setIsValid((prevState) => {
+        return {
+          ...prevState,
+          username: /^[a-zA-Z][a-zA-Z0-9-_]{3,32}$/.test(value),
+        };
+      });
+    }
+    if (name == "email") {
+      setIsValid((prevState) => {
+        return {
+          ...prevState,
+          email: /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi.test(value),
+        };
+      });
+    }
+    if (name == "password") {
+      setIsValid((prevState) => {
+        return {
+          ...prevState,
+          password:
+            /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm.test(value),
+        };
+      });
+    }
   };
-  
 
-  const handleFocus = (event:React.FocusEvent<HTMLInputElement>)=>{
-   
-    const {name} = event.target;
-    if(name == 'username')
-      {
-        setFocused((prevState)=>{
-          return(
-         { ...prevState, username:true,
-         })
-        });
-      }
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    const { name } = event.target;
+    if (name == "username") {
+      setFocused((prevState) => {
+        return { ...prevState, username: true };
+      });
+    }
 
-      if(name == 'email')
-        {
-          setFocused((prevState)=>{
-            return(
-           { ...prevState, email:true,
-           })
-          });
-        }
+    if (name == "email") {
+      setFocused((prevState) => {
+        return { ...prevState, email: true };
+      });
+    }
 
-        if(name == 'password')
-          {
-            setFocused((prevState)=>{
-              return(
-             { ...prevState, password:true,
-             })
-            });
-          }
-
-         
-   
-  }
+    if (name == "password") {
+      setFocused((prevState) => {
+        return { ...prevState, password: true };
+      });
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -145,20 +136,19 @@ export default function SignUp() {
 
     const data = new FormData(event.currentTarget);
 
-  
     const displayName: string = data.get("username") as string;
 
     const email: string = data.get("email") as string;
     const password: string = data.get("password") as string;
-    const file: File= data.get("file") as File;
+    const file: File = data.get("file") as File;
 
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-     console.log('res=', res)
-      const token = nanoid()
-  
-      const storageRef = ref(storage,displayName + '_' + token);
-    
+      console.log("res=", res);
+      const token = nanoid();
+
+      const storageRef = ref(storage, displayName + "_" + token);
+
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on(
@@ -176,8 +166,8 @@ export default function SignUp() {
               displayName,
               photoURL: downloadURL,
             });
-            
-           
+
+            localStorage.setItem('profile_name', displayName+'_'+token)
 
             await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
@@ -191,9 +181,8 @@ export default function SignUp() {
           });
         }
       );
-    
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setErr(true);
     }
   };
@@ -207,16 +196,16 @@ export default function SignUp() {
         sx={{
           height: "75%",
           width: "80%",
-         
+
           position: "relative",
           overflow: "hidden",
           boxShadow:
             "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
-          
-            margin:{
-              xs: " 6rem auto",
-              lg: '6rem auto'
-            }
+
+          margin: {
+            xs: " 6rem auto",
+            lg: "6rem auto",
+          },
         }}
       >
         <CssBaseline />
@@ -226,48 +215,49 @@ export default function SignUp() {
           sx={{
             bgcolor: "rgb(6,0,0)",
             height: { xs: "100vh", lg: "100%" },
-           
+
             color: "#fff",
             position: "absolute",
             top: 0,
             left: "-100%",
             opacity: "0.7",
             transition: "1s",
-           
+
             justifyContent: "center",
             alignItems: "center",
 
             fontSize: 35,
-        
-            width:{
-              lg:"58.5%",
-            
-              
 
+            width: {
+              lg: "58.5%",
             },
-            display:{
-              xs:'none',
-              lg:'flex',
-              sm:'none'
-            }
+            display: {
+              xs: "none",
+              lg: "flex",
+              sm: "none",
+            },
           }}
         >
           <Box
             sx={{
-              
               width: "70%",
               height: "70%",
               // display: "flex",
               // justifyContent: "center",
-              m:'auto',
-              textAlign:'center',
-              pt:'2rem'
+              m: "auto",
+              textAlign: "center",
+              pt: "2rem",
             }}
           >
-            <Box sx={{ fontSize:'35px'}}>Welcome to </Box>
-            <Box >{<SiArlo />}</Box>
-            <Box sx={{ color: "var(--main-color)"}}>Message  Mingle</Box>
-            <Box sx={{fontSize:'25px', mt:'25px'}}> " Where Every Interaction Counts! Discover a world of connections, tailored just for you. Join us and make every chat a special moment."</Box>
+            <Box sx={{ fontSize: "35px" }}>Welcome to </Box>
+            <Box>{<SiArlo />}</Box>
+            <Box sx={{ color: "var(--main-color)" }}>Message Mingle</Box>
+            <Box sx={{ fontSize: "25px", mt: "25px" }}>
+              {" "}
+              " Where Every Interaction Counts! Discover a world of connections,
+              tailored just for you. Join us and make every chat a special
+              moment."
+            </Box>
           </Box>
         </Box>
 
@@ -297,7 +287,6 @@ export default function SignUp() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-             
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "var(--main-color)" }}>
@@ -307,31 +296,26 @@ export default function SignUp() {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
-            <Box
-              component="form"
-             
-              onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
-            >
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
-               
                 fullWidth
                 id="username"
                 label="User Name"
                 name="username"
-               
                 type="text"
                 className="textfield"
                 required={true}
                 onChange={handleInputChange}
                 onBlur={handleFocus}
-              
                 error={!isValid.username}
-
-
               />
-             { !isValid.username && focuse.username && <span  className="errorMessage">*Username should be 3-16 characters and shouldn't contain any special character!</span>}
+              {!isValid.username && focuse.username && (
+                <span className="errorMessage">
+                  *Username should be 3-16 characters and shouldn't contain any
+                  special character!
+                </span>
+              )}
               <TextField
                 margin="normal"
                 required
@@ -343,10 +327,13 @@ export default function SignUp() {
                 onBlur={handleFocus}
                 className="textfield"
                 onChange={handleInputChange}
-                
                 error={!isValid.email}
               />
-           {   !isValid.email && focuse.email && <span  className="errorMessage">*It should be a valid email address! </span>}
+              {!isValid.email && focuse.email && (
+                <span className="errorMessage">
+                  *It should be a valid email address!{" "}
+                </span>
+              )}
 
               <TextField
                 margin="normal"
@@ -359,10 +346,14 @@ export default function SignUp() {
                 onBlur={handleFocus}
                 className="textfield"
                 onChange={handleInputChange}
-                
                 error={!isValid.password}
               />
-          {   !isValid.password && focuse.password && <span  className="errorMessage">*Password should be 8-20 characters and include atleast 1 capital letter, 1 number, 1 letter and 1 special character!</span>}
+              {!isValid.password && focuse.password && (
+                <span className="errorMessage">
+                  *Password should be 8-20 characters and include atleast 1
+                  capital letter, 1 number, 1 letter and 1 special character!
+                </span>
+              )}
               <TextField
                 margin="normal"
                 required
@@ -373,16 +364,12 @@ export default function SignUp() {
                 autoComplete="file"
                 // className="textfield"
                 sx={{ display: "none" }}
-              
-               
               />
 
               <label htmlFor="file" id="avatar">
                 <img src={Add} alt="image" height="45px" width="45px" />{" "}
                 <span style={{ color: "gray" }}>Add your Profile image</span>
               </label>
-          
-
 
               <Button
                 type="submit"
@@ -403,24 +390,31 @@ export default function SignUp() {
               </Button>
               {err && <span>Email is already in use</span>}
               <Grid container>
-                
                 <Grid item>
                   <Link to="/signin">Already have an account? Sign In</Link>
                 </Grid>
               </Grid>
 
-                <Box sx={{display:'flex',justifyContent:'center',position: 'relative', mt:2}}>
-                <div id='line'></div>
-                <span id='or'>or</span> 
-                
-                </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  position: "relative",
+                  mt: 2,
+                }}
+              >
+                <div id="line"></div>
+                <span id="or">or</span>
+              </Box>
 
-                <Box sx={{display:'flex', justifyContent:'center', my:3}}>
-                <button onClick={ signInWithGoogle} style={{border:'none', cursor:'pointer'  }}><GoogleIcon sx={{color:'var(--main-color)'}}/> </button>
-                </Box>
-             
-                
-              
+              <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
+                <button
+                  onClick={signInWithGoogle}
+                  style={{ border: "none", cursor: "pointer" }}
+                >
+                  <GoogleIcon sx={{ color: "var(--main-color)" }} />{" "}
+                </button>
+              </Box>
             </Box>
           </Box>
         </Grid>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,117 +9,165 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import { SiArlo } from "react-icons/si";
-import {  MenuItem } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
 import { useContext, useState } from "react";
+import Profile from "./Profile";
+import "../index.css";
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import CloseIcon from '@mui/icons-material/Close';
+import { ToastContainer } from "react-toastify";
+
+export const PopupContext = createContext();
 
 function Sidenavbar() {
   // const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const currentUser = useContext(AuthContext);
-  const settings = ["Profile", "Account", "Dashboard", "Logout"];
+  const settings = ["Profile", "Logout"];
+  const [popup, setPopup] = useState(true);
+  const [camera, setCamera] = useState(false)
+
+  const [changeProfile, setChangeProfile] = useState();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
   function handleCloseUserMenu(setting: string) {
+    if (setting === "Profile") {
+      setAnchorElUser(null);
+      setPopup(false);
+    }
+
     if (setting === "Logout") {
       signOut(auth);
     }
+
     setAnchorElUser(null);
   }
 
-  return (
-    <AppBar
-      position="static"
-      sx={{ height: { xs: "30%", lg: "10%" }, bgcolor: "var(--main-color)" }}
-    >
-      <Container
-        maxWidth="xl"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          height: "100%",
-          justifyContent: { sm: "space-between" },
-        }}
-      >
-        <Toolbar disableGutters sx={{ width: "100%" }}>
-          <SiArlo id="logo" />
+  // useEffect(()=>{
 
-          <Box
+  //   setChangeProfile(currentUser.photoURL)
+
+  // }, [currentUser, popup])
+
+  return (
+    <>
+      <PopupContext.Provider value={{ popup, setPopup }}>
+        {!popup ? <Profile setcamera = {setCamera}/> : null}
+
+        <div className={`${camera? 'overlayCamera' : 'cameraNotactive'}`}>
+          <Box sx={{ position: "absolute", top: "10%", left: "35%" , height:680, width:680, backgroundColor:'var(--main-color)', pt:2, textAlign:'center',boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}>
+          <CloseIcon sx={{fontSize:40, cursor:'pointer',float:'left', pl:2}}/>
+            <video src="" ></video>
+            <PhotoCameraIcon sx={{fontSize:50,cursor:'pointer','&:hover': {boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}}/>
+          </Box>{" "}
+          </div>
+
+        <AppBar
+          position="static"
+          sx={{
+            height: { xs: "30%", lg: "10%" },
+            bgcolor: "var(--main-color)",
+          }}
+        >
+          <Container
+            maxWidth="xl"
             sx={{
               display: "flex",
-              justifyContent: { lg: "space-between", md: "end", xs: "end" },
               alignItems: "center",
-              width: { lg: "100%", md: "80%", xs: "100%" },
+              height: "100%",
+              justifyContent: { sm: "space-between" },
             }}
           >
-            <Typography
-              variant="h6"
-              noWrap
-              // href="#app-bar-with-responsive-menu"
-              sx={{
-                mr: 2,
-                ml: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "sans-serif",
-                fontWeight: 700,
-                // fontsize:{lg:'35px', xs:'50px'},
-                letterSpacing: ".2rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              Message Mingle
-            </Typography>
+            <Toolbar disableGutters sx={{ width: "100%" }}>
+              <SiArlo id="logo" />
 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    alt={currentUser.displayName}
-                    src={currentUser.photoURL}
-                    sx={{
-                      borderRadius: "50%",
-                      height: { lg: "3.5rem", xs: "2rem" },
-                      width: { lg: "3.5rem", xs: "2rem" },
-                    }}
-                  />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: { lg: "space-between", md: "end", xs: "end" },
+                  alignItems: "center",
+                  width: { lg: "100%", md: "80%", xs: "100%" },
                 }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={() => handleCloseUserMenu(setting)}
+                <Typography
+                  variant="h6"
+                  noWrap
+                  // href="#app-bar-with-responsive-menu"
+                  sx={{
+                    mr: 2,
+                    ml: 2,
+                    display: { xs: "none", md: "flex" },
+                    fontFamily: "sans-serif",
+                    fontWeight: 700,
+                    // fontsize:{lg:'35px', xs:'50px'},
+                    letterSpacing: ".2rem",
+                    color: "inherit",
+                    textDecoration: "none",
+                  }}
+                >
+                  Message Mingle
+                </Typography>
+
+                <Box sx={{ flexGrow: 0 }}>
+                  <Tooltip title="Open settings">
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    
+                      <Avatar
+                        alt={currentUser.displayName}
+                        src={currentUser.photoURL}
+                        sx={{
+                          borderRadius: "50%",
+                          height: { lg: "3.5rem", xs: "2rem" },
+                          width: { lg: "3.5rem", xs: "2rem" },
+                        }}
+                      />
+
+
+
+                    </IconButton>
+                  
+                  </Tooltip>
+                 
+
+                  <Menu
+                    sx={{ mt: "45px" }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
                   >
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+                    {settings.map((setting) => (
+                      <MenuItem
+                        key={setting}
+                        onClick={() => handleCloseUserMenu(setting)}
+                      >
+                        <Typography textAlign="center">{setting}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Box>
+              </Box>
+            </Toolbar>
+          </Container>
+        </AppBar>
+      </PopupContext.Provider>
+     
+    </>
   );
 }
 
