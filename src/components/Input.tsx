@@ -1,4 +1,4 @@
-import { Box, Button, InputBase, Stack } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import "../index.css";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
@@ -15,6 +15,8 @@ import {
 import { uploadBytesResumable, getDownloadURL, ref } from "firebase/storage";
 import { storage, db } from "../firebase";
 import { v4 as uuid } from "uuid";
+
+import InputEmoji from "react-input-emoji";
 
 function Input() {
   const currentUser = useContext(AuthContext);
@@ -73,7 +75,7 @@ function Input() {
       [data.chatId + ".date"]: serverTimestamp(),
     });
 
-    console.log('datauid , datachatid =', data.uid, data.chatId)
+    console.log("datauid , datachatid =", data.uid, data.chatId);
     await updateDoc(doc(db, "userChats", data.uid), {
       [data.chatId + ".lastMessage"]: {
         text,
@@ -83,6 +85,10 @@ function Input() {
     });
   };
 
+  function handleOnEnter(text: any) {
+    console.log("enter", text);
+  }
+
   return (
     <Box
       sx={{
@@ -91,28 +97,33 @@ function Input() {
         alignItems: "center",
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
         gap: { lg: 15, xs: 9 },
-        p: { lg: "10px", xs: "5px" },
+        padding: { lg: "18px", xs: "8px" },
       }}
     >
       {err && <span>Unable to send your message</span>}
-      <InputBase
-        placeholder="Type your message"
-        sx={{ fontSize: { lg: "23px", xs: "18px" }, width: "80%", p: "12px" }}
-        onChange={(e) => setText(e.target.value)}
+
+      <InputEmoji
         value={text}
+        onChange={(e: any) => setText(e.target.value)}
+        cleanOnEnter
+        onEnter={handleOnEnter}
+        color="#494846"
+        background="#ddddf7"
+        fontSize={23}
+        placeholder="Type your message here..."
+        shouldReturn={false}
+        shouldConvertEmojiToImage={false}
       />
 
-      <Stack direction="row">
-        <Button
-          id="sendbtn"
-          variant="contained"
-          endIcon={<SendIcon />}
-          sx={{ mr: 3 }}
-          onClick={handleSend}
-        >
-          Send
-        </Button>
-      </Stack>
+      <Button
+        id="sendbtn"
+        variant="contained"
+        endIcon={<SendIcon />}
+        sx={{ mr: 3 }}
+        onClick={handleSend}
+      >
+        Send
+      </Button>
     </Box>
   );
 }

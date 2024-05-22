@@ -70,7 +70,7 @@ function Chats() {
             {chat[1]?.userInfo.displayName}
             
           </Typography>
-          <Typography variant="h6" sx={{ color: "#E8DFCA", fontSize:{lg:'20px', sm:'18px'} }}>
+          <Typography variant="h6" sx={{ color: "#E8DFCA", fontSize:{lg:'20px', sm:'18px'} }} title={chat[1]?.lastMessage?.text}>
             {/* {chat[1].userInfo.lastMessage?.text} */}
             {chat[1]?.lastMessage?.text}
           </Typography>

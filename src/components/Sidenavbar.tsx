@@ -1,4 +1,4 @@
-import React, { createContext, useEffect } from "react";
+import React, { createContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -18,19 +18,24 @@ import Profile from "./Profile";
 import "../index.css";
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import CloseIcon from '@mui/icons-material/Close';
-import { ToastContainer } from "react-toastify";
 
-export const PopupContext = createContext();
+
+interface PopupContextType {
+  popup: boolean;
+  setPopup: (value: boolean) => void;
+}
+
+export const PopupContext = createContext<PopupContextType | undefined>(undefined);
 
 function Sidenavbar() {
   // const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const currentUser = useContext(AuthContext);
   const settings = ["Profile", "Logout"];
-  const [popup, setPopup] = useState(true);
+  const [popup, setPopup] = useState<boolean>(true);
   const [camera, setCamera] = useState(false)
 
-  const [changeProfile, setChangeProfile] = useState();
+  
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -49,11 +54,9 @@ function Sidenavbar() {
     setAnchorElUser(null);
   }
 
-  // useEffect(()=>{
-
-  //   setChangeProfile(currentUser.photoURL)
-
-  // }, [currentUser, popup])
+  const closeCamera =()=>{
+    setCamera(false)
+  }
 
   return (
     <>
@@ -62,7 +65,7 @@ function Sidenavbar() {
 
         <div className={`${camera? 'overlayCamera' : 'cameraNotactive'}`}>
           <Box sx={{ position: "absolute", top: "10%", left: "35%" , height:680, width:680, backgroundColor:'var(--main-color)', pt:2, textAlign:'center',boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}>
-          <CloseIcon sx={{fontSize:40, cursor:'pointer',float:'left', pl:2}}/>
+          <CloseIcon sx={{fontSize:40, cursor:'pointer',float:'left', pl:2}} onClick={()=>closeCamera()}/>
             <video src="" ></video>
             <PhotoCameraIcon sx={{fontSize:50,cursor:'pointer','&:hover': {boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}}/>
           </Box>{" "}

@@ -23,17 +23,21 @@ import { PopupContext } from "./Sidenavbar";
 import {  deleteObject } from "firebase/storage";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CloseIcon from '@mui/icons-material/Close';
 
-function Profile(props) {
-  // const [show, setShow] = useState(true)
-console.log(props)
+
+function Profile(props:any) {
+ 
+
   const show = true;
   const [viewimg, setViewImg] = useState(false);
+  const currentUser = useContext(AuthContext);
+  const [userName] =useState(currentUser.displayName)
 
-  const { popup, setPopup } = useContext(PopupContext);
+  const {setPopup } = useContext(PopupContext);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const currentUser = useContext(AuthContext);
+ 
   console.log("currentuser", currentUser);
   const [isReadOnlyname, setIsReadOnlyname] = useState(true);
   const [isReadOnlyabout, setIsReadOnlyabout] = useState(true);
@@ -55,12 +59,12 @@ console.log(props)
     }
 
     if (setting === "Upload Photo") {
-      document.getElementById("file").click();
+      (document.getElementById("file") as HTMLElement | null)?.click()
     }
 
     if (setting === "Take Photo") {
       var front = false;
-      var video = document.querySelector("video");
+      var video = document.querySelector("video") as HTMLVideoElement | null;
       front = !front;
       var constraints = {
         video: {
@@ -70,27 +74,32 @@ console.log(props)
          
         },
       };
-      navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then(function (mediaStream) {
-          video.srcObject = mediaStream;
-          video.onloadedmetadata = function (e) {
-            video.play();
-          };
-          setPopup(true);
-          props.setcamera(true)
-        })
-        .catch(function (err) {
-          console.log(err.name + ": " + err.message);
-        });
+      if (video) {
+        navigator.mediaDevices
+          .getUserMedia(constraints)
+          .then((mediaStream) => {
+            video.srcObject = mediaStream;
+            video.onloadedmetadata = function () {
+              video.play();
+            };
+            setPopup(true);
+            props.setcamera(true);
+          })
+          .catch((err) => {
+            console.log(err.name + ": " + err.message);
+          });
+      } else {
+        console.error('Video element not found');
+      }
     }
 
     if(setting === 'Remove Photo')
       {
-        const data = localStorage.getItem('profile_name')
-        console.log('data=', data)
-        const desertRef = ref(storage, localStorage.getItem('profile_name'));
-        if(data === null)
+        const profile_Name = localStorage.getItem('profile_name')?? 'default-profile-name'
+       
+        const desertRef = ref(storage, profile_Name);
+
+        if(profile_Name === null)
           {
             toast.info('There is no photo to remove')
            
@@ -123,7 +132,7 @@ deleteObject(desertRef).then(() => {
 
     const overlayimg = document.getElementsByClassName("overlayImg")[0];
 
-    overlayimg?.addEventListener("click", function (e) {
+    overlayimg?.addEventListener("click", function (e:any) {
       const isClick = ignoreClickOnImg.contains(e.target);
 
       if (!isClick) {
@@ -132,7 +141,7 @@ deleteObject(desertRef).then(() => {
     });
   }, [viewimg]);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event:any) => {
     const file = event.target.files[0];
     console.log(file);
     const token = nanoid();
@@ -164,6 +173,10 @@ deleteObject(desertRef).then(() => {
     //  setShow(false)
     setPopup(true);
   };
+
+  const closeProfile =()=>{
+    setPopup(true);
+  }
 
   return (
     <>
@@ -207,6 +220,7 @@ deleteObject(desertRef).then(() => {
             top: "10%",
             left: "28%",
             bgcolor: "var(--second-color)",
+            
           },
         }}
       >
@@ -216,9 +230,12 @@ deleteObject(desertRef).then(() => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+           
           }}
         >
-          <Box sx={{ flexGrow: 0, p: "30px" }}>
+          <CloseIcon sx={{fontSize:40, cursor:'pointer', color:'white', float:'right',pt:1 }} onClick={()=>closeProfile()}/>
+
+          <Box sx={{ flexGrow: 0, p: "30px" , }}>
             <IconButton
               onClick={handleOpenUserMenu}
               sx={{ p: 0, position: "relative", overflow: "hidden" }}
@@ -289,7 +306,7 @@ deleteObject(desertRef).then(() => {
           </Box>
 
           <Box sx={{ mt: "40px", width: "55%" }}>
-            <Box sx={{ mb: "20px" }}>
+            <Box sx={{ mb: "20px",  borderBottom: "3px solid white" }}>
               <Typography
                 variant="h6"
                 sx={{ color: "white", fontWeight: 600, letterSpacing: 2 }}
@@ -302,7 +319,8 @@ deleteObject(desertRef).then(() => {
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
-                  boxShadow: "2px 4px 6px rgba(0,0,0,0.5)",
+                
+                
                 }}
                 id="user"
               >
@@ -310,6 +328,7 @@ deleteObject(desertRef).then(() => {
                   type="text"
                   className="userinfo"
                   id="username"
+                  value={userName}
                   readOnly={isReadOnlyname}
                   autoFocus={!isReadOnlyname}
                 />{" "}
