@@ -20,19 +20,22 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import CloseIcon from '@mui/icons-material/Close';
 
 
-interface PopupContextType {
-  popup: boolean;
-  setPopup: (value: boolean) => void;
-}
 
-export const PopupContext = createContext<PopupContextType | undefined>(undefined);
+type PopupContextType=any;
+  
+ 
+
+
+export const PopupContext = createContext<PopupContextType | undefined>(undefined); 
+
+
 
 function Sidenavbar() {
   // const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const currentUser = useContext(AuthContext);
   const settings = ["Profile", "Logout"];
-  const [popup, setPopup] = useState<boolean>(true);
+  const [popup, setPopup] = useState(true);
   const [camera, setCamera] = useState(false)
 
   
@@ -60,7 +63,8 @@ function Sidenavbar() {
 
   return (
     <>
-      <PopupContext.Provider value={{ popup, setPopup }}>
+      <PopupContext.Provider value={ {setPopup} }>
+
         {!popup ? <Profile setcamera = {setCamera}/> : null}
 
         <div className={`${camera? 'overlayCamera' : 'cameraNotactive'}`}>
@@ -171,7 +175,13 @@ function Sidenavbar() {
       </PopupContext.Provider>
      
     </>
+
+    
   );
+  
+
+  
 }
+
 
 export default Sidenavbar;

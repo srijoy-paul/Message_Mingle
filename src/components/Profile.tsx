@@ -32,15 +32,15 @@ function Profile(props:any) {
   const show = true;
   const [viewimg, setViewImg] = useState(false);
   const currentUser = useContext(AuthContext);
-  const [userName] =useState(currentUser.displayName)
 
-  const {setPopup } = useContext(PopupContext);
+
+  const {setPopup} = useContext(PopupContext);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
  
   console.log("currentuser", currentUser);
-  const [isReadOnlyname, setIsReadOnlyname] = useState(true);
-  const [isReadOnlyabout, setIsReadOnlyabout] = useState(true);
+  const [isReadOnlyname, setIsReadOnlyname] = useState(false);
+  const [isReadOnlyabout, setIsReadOnlyabout] = useState(false);
   const settings = [
     "View Photo",
     "Upload Photo",
@@ -78,9 +78,10 @@ function Profile(props:any) {
         navigator.mediaDevices
           .getUserMedia(constraints)
           .then((mediaStream) => {
+            if(video === null) return
             video.srcObject = mediaStream;
             video.onloadedmetadata = function () {
-              video.play();
+              video?.play();
             };
             setPopup(true);
             props.setcamera(true);
@@ -120,11 +121,11 @@ deleteObject(desertRef).then(() => {
   }
 
   const toggleReadOnlyname = () => {
-    setIsReadOnlyname(!isReadOnlyname);
+    setIsReadOnlyname(isReadOnlyname);
   };
 
   const toggleReadOnlyabout = () => {
-    setIsReadOnlyabout(!isReadOnlyabout);
+    setIsReadOnlyabout(isReadOnlyabout);
   };
 
   useEffect(() => {
@@ -328,9 +329,9 @@ deleteObject(desertRef).then(() => {
                   type="text"
                   className="userinfo"
                   id="username"
-                  value={userName}
+                  defaultValue={currentUser.displayName}
                   readOnly={isReadOnlyname}
-                  autoFocus={!isReadOnlyname}
+                  autoFocus={isReadOnlyname}
                 />{" "}
                 <EditIcon
                   sx={{ fontSize: "30px", cursor: "pointer", mt: 1 }}
@@ -351,7 +352,7 @@ deleteObject(desertRef).then(() => {
                   type="text"
                   className="userinfo"
                   readOnly={isReadOnlyabout}
-                  autoFocus={!isReadOnlyabout}
+                  autoFocus={isReadOnlyabout}
                 />{" "}
                 <EditIcon
                   sx={{ fontSize: "30px", cursor: "pointer" }}
