@@ -2,10 +2,21 @@ import Sidebar from "../components/Sidebar";
 import Chat from "../components/Chat";
 import { Box } from "@mui/material";
 import "../index.css";
+import { createContext, useState } from "react";
+
+export const ChangeContext = createContext();
 
 function Home() {
+  const [change , setChange]=useState(false);
+  
+    console.log('rendered')
+   
   return (
     <>
+    <ChangeContext.Provider value={{setChange}}>
+
+     {change}
+   
       <Box
         sx={{
           display: "flex",
@@ -38,6 +49,7 @@ function Home() {
           <Chat />
         </Box>
       </Box>
+      </ChangeContext.Provider>
     </>
   );
 }

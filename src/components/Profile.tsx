@@ -24,23 +24,28 @@ import {  deleteObject } from "firebase/storage";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CloseIcon from '@mui/icons-material/Close';
+import { ChangeContext } from "../pages/Home";
+
 
 
 function Profile(props:any) {
  
 
   const show = true;
+  let username;
   const [viewimg, setViewImg] = useState(false);
   const currentUser = useContext(AuthContext);
+  const {setChange} = useContext(ChangeContext)
 
 
   const {setPopup} = useContext(PopupContext);
 
+
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
  
   console.log("currentuser", currentUser);
-  const [isReadOnlyname, setIsReadOnlyname] = useState(false);
-  const [isReadOnlyabout, setIsReadOnlyabout] = useState(false);
+  const [isReadOnlyname, setIsReadOnlyname] = useState(true);
+  const [isReadOnlyabout, setIsReadOnlyabout] = useState(true);
   const settings = [
     "View Photo",
     "Upload Photo",
@@ -120,12 +125,44 @@ deleteObject(desertRef).then(() => {
     setAnchorElUser(null);
   }
 
-  const toggleReadOnlyname = () => {
-    setIsReadOnlyname(isReadOnlyname);
+
+  const toggleReadOnlyname = async() => {
+
+    if(isReadOnlyname === true){
+      (document.getElementById('username') as HTMLInputElement | null)?.focus();
+      setIsReadOnlyname(false);
+    }
+else
+  {
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      displayName : username,
+    });
+    setIsReadOnlyname(true);
+    console.log('updated')
+
+      }
+    
   };
 
+  const updateUsername =(e)=>{
+    
+     username = e.target.value;
+    
+    
+  }
+
   const toggleReadOnlyabout = () => {
-    setIsReadOnlyabout(isReadOnlyabout);
+    
+    if(isReadOnlyabout === true){
+      (document.getElementById('userinfo') as HTMLInputElement | null)?.focus();
+      setIsReadOnlyabout(false);
+    }
+else
+  {
+    setIsReadOnlyabout(true);
+      
+      }
   };
 
   useEffect(() => {
@@ -141,6 +178,14 @@ deleteObject(desertRef).then(() => {
       }
     });
   }, [viewimg]);
+
+
+  // useEffect(() => {
+
+  //     setChange(true);
+    
+  // });
+
 
   const handleFileChange = (event:any) => {
     const file = event.target.files[0];
@@ -167,12 +212,13 @@ deleteObject(desertRef).then(() => {
             photoURL: downloadURL,
           });
         });
-
-        
+        setChange(true);
+        setPopup(true);  
+   
       }
     );
     //  setShow(false)
-    setPopup(true);
+    
   };
 
   const closeProfile =()=>{
@@ -181,6 +227,7 @@ deleteObject(desertRef).then(() => {
 
   return (
     <>
+   { console.log("currentusername=",currentUser)}
       <div>
         <TextField
           margin="normal"
@@ -329,9 +376,10 @@ deleteObject(desertRef).then(() => {
                   type="text"
                   className="userinfo"
                   id="username"
-                  defaultValue={currentUser.displayName}
+                 defaultValue={currentUser.displayName}
                   readOnly={isReadOnlyname}
-                  autoFocus={isReadOnlyname}
+                  onChange={(e)=>updateUsername(e)}
+                 
                 />{" "}
                 <EditIcon
                   sx={{ fontSize: "30px", cursor: "pointer", mt: 1 }}
@@ -351,8 +399,9 @@ deleteObject(desertRef).then(() => {
                 <input
                   type="text"
                   className="userinfo"
+                  id='userinfo'
                   readOnly={isReadOnlyabout}
-                  autoFocus={isReadOnlyabout}
+             
                 />{" "}
                 <EditIcon
                   sx={{ fontSize: "30px", cursor: "pointer" }}

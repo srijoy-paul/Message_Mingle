@@ -97,7 +97,7 @@ function Input() {
         alignItems: "center",
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
         gap: { lg: 15, xs: 9 },
-        padding: { lg: "18px", xs: "8px" },
+        padding: { lg: "7px", xs: "4px" },
       }}
     >
       {err && <span>Unable to send your message</span>}
@@ -109,7 +109,7 @@ function Input() {
         onEnter={handleOnEnter}
         color="#494846"
         background="#ddddf7"
-        fontSize={23}
+        fontSize={16}
         placeholder="Type your message here..."
         shouldReturn={false}
         shouldConvertEmojiToImage={false}

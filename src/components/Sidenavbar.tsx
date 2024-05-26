@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import React, { createContext, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -18,6 +18,7 @@ import Profile from "./Profile";
 import "../index.css";
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import CloseIcon from '@mui/icons-material/Close';
+import { ChangeContext } from "../pages/Home";
 
 
 
@@ -37,6 +38,8 @@ function Sidenavbar() {
   const settings = ["Profile", "Logout"];
   const [popup, setPopup] = useState(true);
   const [camera, setCamera] = useState(false)
+  const {setChange} = useContext(ChangeContext)
+ 
 
   
 
@@ -61,11 +64,21 @@ function Sidenavbar() {
     setCamera(false)
   }
 
+  // useEffect(()=>{
+
+   
+  //     setChange(true)
+    
+    
+
+  // })
+
   return (
     <>
       <PopupContext.Provider value={ {setPopup} }>
 
-        {!popup ? <Profile setcamera = {setCamera}/> : null}
+        {!popup ? <Profile setcamera = {setCamera}/> : null} 
+        {popup}
 
         <div className={`${camera? 'overlayCamera' : 'cameraNotactive'}`}>
           <Box sx={{ position: "absolute", top: "10%", left: "35%" , height:680, width:680, backgroundColor:'var(--main-color)', pt:2, textAlign:'center',boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}>
