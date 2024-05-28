@@ -1,4 +1,5 @@
-import React, { createContext, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { createContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -18,7 +19,6 @@ import Profile from "./Profile";
 import "../index.css";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import CloseIcon from "@mui/icons-material/Close";
-import { ChangeContext } from "../pages/Home";
 
 type PopupContextType = any;
 
@@ -33,7 +33,6 @@ function Sidenavbar() {
   const settings = ["Profile", "Logout"];
   const [popup, setPopup] = useState(true);
   const [camera, setCamera] = useState(false);
-  const { setChange } = useContext(ChangeContext);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);

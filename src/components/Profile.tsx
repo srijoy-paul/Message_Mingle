@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -28,7 +29,8 @@ import { ChangeContext } from "../pages/Home";
 
 function Profile(props: any) {
   const show = true;
-  let username;
+  let username: string;
+
   const [viewimg, setViewImg] = useState(false);
   const currentUser = useContext(AuthContext);
   const { setChange } = useContext(ChangeContext);
@@ -62,10 +64,10 @@ function Profile(props: any) {
     }
 
     if (setting === "Take Photo") {
-      var front = false;
-      var video = document.querySelector("video") as HTMLVideoElement | null;
+      let front = false;
+      const video = document.querySelector("video") as HTMLVideoElement | null;
       front = !front;
-      var constraints = {
+      const constraints = {
         video: {
           facingMode: front ? "user" : "environment",
           width: 540,
@@ -128,7 +130,7 @@ function Profile(props: any) {
     }
   };
 
-  const updateUsername = (e) => {
+  const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     username = e.target.value;
   };
 
