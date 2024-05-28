@@ -1,12 +1,9 @@
 //  Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {getAuth} from 'firebase/auth';
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { GoogleAuthProvider } from "firebase/auth";
-
-
-
 
 // import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -20,8 +17,8 @@ const firebaseConfig = {
   projectId: "message-mingle",
   storageBucket: "message-mingle.appspot.com",
   messagingSenderId: "104220981443",
-  appId: "1:104220981443:web:53fa6a7065c6aa2177ca76", 
-  measurementId: "G-QGEB3JGR59"
+  appId: "1:104220981443:web:53fa6a7065c6aa2177ca76",
+  measurementId: "G-QGEB3JGR59",
 };
 
 // Initialize Firebase

@@ -1,20 +1,18 @@
 :root {
-  --main-color: #003C43;
-  --second-color:#135D66;
-  --third-color:#77B0AA;
-  --light-color:#E3FEF7;
-  
+  --main-color: #003c43;
+  --second-color: #135d66;
+  --third-color: #77b0aa;
+  --light-color: #e3fef7;
 }
 
-*{
-  margin:0;
-  padding:0;
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
 }
 
- #mainCard:hover #hoverEfft{ 
-  left:0;
-  
-  
+#mainCard:hover #hoverEfft {
+  left: 0;
 }
 #chat-container {
   overflow-y: auto; /* This is necessary to enable the scrollbar */
@@ -23,131 +21,113 @@
 #chat-container::-webkit-scrollbar {
   width: 10px;
   /* background-color: gray; */
-  
 }
 
 /* Track */
 #chat-container::-webkit-scrollbar-track {
-
   border-radius: 10px;
   /* background-color: var(--main-color); */
- 
 }
-#messgContainer{
+#messgContainer {
   overflow-y: auto;
 }
 #messgContainer::-webkit-scrollbar {
   width: 10px;
   /* background-color: gray; */
-  
 }
 #messgContainer::-webkit-scrollbar-track {
-
   border-radius: 10px;
   /* background-color: var(--main-color); */
- 
 }
 
-
-
-#sendbtn{
+#sendbtn {
   background-color: var(--main-color);
 }
-#sendbtn:hover{
+#sendbtn:hover {
   background-color: var(--second-color);
 }
-.user:hover{
+.user:hover {
   background-color: var(--main-color);
 }
-#logo{
+#logo {
   font-size: 25px;
 }
-.ownermessg{
+.ownermessg {
   max-width: 100%;
   display: flex;
   flex-direction: row-reverse;
   padding: 10px;
   margin-top: 10px;
-  gap:10px
-  
-  
+  gap: 10px;
 }
-.messgContent{
-  width:40%;
+.messgContent {
+  width: 40%;
   display: flex;
   align-items: center;
   padding: 12px;
   border-radius: 30px 0px 30px 30px;
   background-color: var(--second-color);
-  color:#fff;
+  color: #fff;
 }
 /* sx={{maxWidth:'100%', p:'10px',mt:3, display:'flex',gap:3}} */
 /* sx={{bgcolor:'#fff', width:'40%', display:'flex',alignItems:'center',p:2}} */
 
-
-
- #avatar{
+#avatar {
   display: flex;
   align-items: center;
-  border: 1px solid #ADBC9F;
+  border: 1px solid #adbc9f;
   margin-top: 20px;
   padding: 8px;
   border-radius: 5px;
   cursor: pointer;
 }
-#avatar span{
+#avatar span {
   padding-left: 10px;
 }
-#avatar:hover{
- border: 1px solid black;
+#avatar:hover {
+  border: 1px solid black;
 }
 
- span.errorMessage{
-  color:red;
- }
+span.errorMessage {
+  color: red;
+}
 
- #or{
-  font-size: 15px;
-  border:2px solid var(--main-color);
-  padding: 1px 6px;
+#or {
+  font-size: 12px;
+  border: 2px solid var(--main-color);
+  padding: 0px 6px;
   border-radius: 40%;
-z-index: 1;
+  z-index: 1;
   background-color: white;
- 
-
- }
- #line{
+}
+#line {
   position: absolute;
   content: "";
   height: 1px;
-  width:90%;
+  width: 90%;
   background-color: gray;
-  top:12px;
-
-  
-  
- }
- .overlay {
+  top: 12px;
+}
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgb(6,0,0);
-  opacity:0.7;
+  background-color: rgb(6, 0, 0);
+  opacity: 0.7;
   z-index: 1;
 }
-.userinfo{
+.userinfo {
   border: none;
   outline: none;
-  padding: 10px;
-  
+  padding: 8px;
+
   background-color: transparent;
   /* border-bottom: 4px solid black; */
-  font-size: 25px;
+  font-size: 18px;
 }
 .overlayImg {
- 
   position: fixed;
   top: 0;
   left: 0;
@@ -157,32 +137,28 @@ z-index: 1;
   /* opacity:0.9; */
   z-index: 3;
 }
-.profileimg{
-  height:30rem;
-  width:30rem;
+.profileimg {
+  height: 30rem;
+  width: 30rem;
 }
 
-#profilephoto:hover #profileimghover{
-left:0;
+#profilephoto:hover #profileimghover {
+  left: 0;
 }
 
 .overlayCamera {
- position: absolute;
+  position: absolute;
   top: 0;
-  left: 0; 
+  left: 0;
   width: 100vw;
   height: 100vh;
- 
+
   background-color: rgba(6, 0, 0, 0.725);
   /* opacity:0.9; */
   /* opacity:0.3; */
   z-index: 3;
-  display:block;
-
+  display: block;
 }
-.cameraNotactive{
-  display:none;
+.cameraNotactive {
+  display: none;
 }
-
- 
-

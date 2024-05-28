@@ -20,29 +20,23 @@ import { doc, updateDoc } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import { updateProfile } from "firebase/auth";
 import { PopupContext } from "./Sidenavbar";
-import {  deleteObject } from "firebase/storage";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import CloseIcon from '@mui/icons-material/Close';
+import { deleteObject } from "firebase/storage";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import CloseIcon from "@mui/icons-material/Close";
 import { ChangeContext } from "../pages/Home";
 
-
-
-function Profile(props:any) {
- 
-
+function Profile(props: any) {
   const show = true;
   let username;
   const [viewimg, setViewImg] = useState(false);
   const currentUser = useContext(AuthContext);
-  const {setChange} = useContext(ChangeContext)
+  const { setChange } = useContext(ChangeContext);
 
-
-  const {setPopup} = useContext(PopupContext);
-
+  const { setPopup } = useContext(PopupContext);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
- 
+
   console.log("currentuser", currentUser);
   const [isReadOnlyname, setIsReadOnlyname] = useState(true);
   const [isReadOnlyabout, setIsReadOnlyabout] = useState(true);
@@ -64,7 +58,7 @@ function Profile(props:any) {
     }
 
     if (setting === "Upload Photo") {
-      (document.getElementById("file") as HTMLElement | null)?.click()
+      (document.getElementById("file") as HTMLElement | null)?.click();
     }
 
     if (setting === "Take Photo") {
@@ -74,16 +68,15 @@ function Profile(props:any) {
       var constraints = {
         video: {
           facingMode: front ? "user" : "environment",
-          width: 640,
-          height: 480,
-         
+          width: 540,
+          height: 380,
         },
       };
       if (video) {
         navigator.mediaDevices
           .getUserMedia(constraints)
           .then((mediaStream) => {
-            if(video === null) return
+            if (video === null) return;
             video.srcObject = mediaStream;
             video.onloadedmetadata = function () {
               video?.play();
@@ -95,74 +88,57 @@ function Profile(props:any) {
             console.log(err.name + ": " + err.message);
           });
       } else {
-        console.error('Video element not found');
+        console.error("Video element not found");
       }
     }
 
-    if(setting === 'Remove Photo')
-      {
-        const profile_Name = localStorage.getItem('profile_name')?? 'default-profile-name'
-       
-        const desertRef = ref(storage, profile_Name);
+    if (setting === "Remove Photo") {
+      const profile_Name =
+        localStorage.getItem("profile_name") ?? "default-profile-name";
 
-        if(profile_Name === null)
-          {
-            toast.info('There is no photo to remove')
-           
-          }
-        localStorage.removeItem('profile_name')
+      const desertRef = ref(storage, profile_Name);
 
-
-deleteObject(desertRef).then(() => {
- 
-  
-  setPopup(true);
-}).catch((error) => {
-  console.log(error)
-});
+      if (profile_Name === null) {
+        toast.info("There is no photo to remove");
       }
+      localStorage.removeItem("profile_name");
+
+      deleteObject(desertRef)
+        .then(() => {
+          setPopup(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
 
     setAnchorElUser(null);
   }
 
-
-  const toggleReadOnlyname = async() => {
-
-    if(isReadOnlyname === true){
-      (document.getElementById('username') as HTMLInputElement | null)?.focus();
+  const toggleReadOnlyname = async () => {
+    if (isReadOnlyname === true) {
+      (document.getElementById("username") as HTMLInputElement | null)?.focus();
       setIsReadOnlyname(false);
+    } else {
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        displayName: username,
+      });
+      setIsReadOnlyname(true);
+      console.log("updated");
     }
-else
-  {
-
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      displayName : username,
-    });
-    setIsReadOnlyname(true);
-    console.log('updated')
-
-      }
-    
   };
 
-  const updateUsername =(e)=>{
-    
-     username = e.target.value;
-    
-    
-  }
+  const updateUsername = (e) => {
+    username = e.target.value;
+  };
 
   const toggleReadOnlyabout = () => {
-    
-    if(isReadOnlyabout === true){
-      (document.getElementById('userinfo') as HTMLInputElement | null)?.focus();
+    if (isReadOnlyabout === true) {
+      (document.getElementById("userinfo") as HTMLInputElement | null)?.focus();
       setIsReadOnlyabout(false);
+    } else {
+      setIsReadOnlyabout(true);
     }
-else
-  {
-    setIsReadOnlyabout(true);
-      
-      }
   };
 
   useEffect(() => {
@@ -170,7 +146,7 @@ else
 
     const overlayimg = document.getElementsByClassName("overlayImg")[0];
 
-    overlayimg?.addEventListener("click", function (e:any) {
+    overlayimg?.addEventListener("click", function (e: any) {
       const isClick = ignoreClickOnImg.contains(e.target);
 
       if (!isClick) {
@@ -179,15 +155,13 @@ else
     });
   }, [viewimg]);
 
-
   // useEffect(() => {
 
   //     setChange(true);
-    
+
   // });
 
-
-  const handleFileChange = (event:any) => {
+  const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     console.log(file);
     const token = nanoid();
@@ -206,28 +180,29 @@ else
             photoURL: downloadURL,
           });
 
-          localStorage.setItem('profile_name', currentUser.displayName+'_'+token)
+          localStorage.setItem(
+            "profile_name",
+            currentUser.displayName + "_" + token
+          );
 
           await updateDoc(doc(db, "users", currentUser.uid), {
             photoURL: downloadURL,
           });
         });
         setChange(true);
-        setPopup(true);  
-   
+        setPopup(true);
       }
     );
     //  setShow(false)
-    
   };
 
-  const closeProfile =()=>{
+  const closeProfile = () => {
     setPopup(true);
-  }
+  };
 
   return (
     <>
-   { console.log("currentusername=",currentUser)}
+      {console.log("currentusername=", currentUser)}
       <div>
         <TextField
           margin="normal"
@@ -268,7 +243,6 @@ else
             top: "10%",
             left: "28%",
             bgcolor: "var(--second-color)",
-            
           },
         }}
       >
@@ -278,12 +252,20 @@ else
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-           
           }}
         >
-          <CloseIcon sx={{fontSize:40, cursor:'pointer', color:'white', float:'right',pt:1 }} onClick={()=>closeProfile()}/>
+          <CloseIcon
+            sx={{
+              fontSize: 30,
+              cursor: "pointer",
+              color: "white",
+              float: "right",
+              pt: 1,
+            }}
+            onClick={() => closeProfile()}
+          />
 
-          <Box sx={{ flexGrow: 0, p: "30px" , }}>
+          <Box sx={{ flexGrow: 0, p: "10px" }}>
             <IconButton
               onClick={handleOpenUserMenu}
               sx={{ p: 0, position: "relative", overflow: "hidden" }}
@@ -353,8 +335,8 @@ else
             </Menu>
           </Box>
 
-          <Box sx={{ mt: "40px", width: "55%" }}>
-            <Box sx={{ mb: "20px",  borderBottom: "3px solid white" }}>
+          <Box sx={{ mt: "35px", width: "55%" }}>
+            <Box sx={{ mb: "20px", borderBottom: "3px solid white" }}>
               <Typography
                 variant="h6"
                 sx={{ color: "white", fontWeight: 600, letterSpacing: 2 }}
@@ -367,8 +349,6 @@ else
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
-                
-                
                 }}
                 id="user"
               >
@@ -376,13 +356,12 @@ else
                   type="text"
                   className="userinfo"
                   id="username"
-                 defaultValue={currentUser.displayName}
+                  defaultValue={currentUser.displayName}
                   readOnly={isReadOnlyname}
-                  onChange={(e)=>updateUsername(e)}
-                 
+                  onChange={(e) => updateUsername(e)}
                 />{" "}
                 <EditIcon
-                  sx={{ fontSize: "30px", cursor: "pointer", mt: 1 }}
+                  sx={{ fontSize: "25px", cursor: "pointer", mt: 1 }}
                   onClick={toggleReadOnlyname}
                 />
               </Box>
@@ -399,12 +378,11 @@ else
                 <input
                   type="text"
                   className="userinfo"
-                  id='userinfo'
+                  id="userinfo"
                   readOnly={isReadOnlyabout}
-             
                 />{" "}
                 <EditIcon
-                  sx={{ fontSize: "30px", cursor: "pointer" }}
+                  sx={{ fontSize: "25px", cursor: "pointer" }}
                   onClick={toggleReadOnlyabout}
                 />
               </Box>
@@ -412,7 +390,7 @@ else
           </Box>
         </Paper>
       </Box>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }

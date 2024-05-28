@@ -1,4 +1,4 @@
-import { Avatar, Box,InputAdornment, InputBase, Paper } from "@mui/material";
+import { Avatar, Box, InputAdornment, InputBase, Paper } from "@mui/material";
 import { SetStateAction, useContext, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { db } from "../firebase";
@@ -43,7 +43,7 @@ function Searchbar() {
       } else {
         // Assuming only one user is expected, get the first document
         const userDoc = querySnapshot.docs[0];
-        const userData = userDoc.data();
+        const userData = userDoc?.data();
         setUser(userData);
         setErr(false);
       }
@@ -62,7 +62,7 @@ function Searchbar() {
   const handleSelect = async () => {
     //check whether group(chats in firestore) exists, if not
     const combinedId =
-      currentUser.uid > user.uid
+      currentUser?.uid > user?.uid
         ? currentUser.uid + user.uid
         : user.uid + currentUser.uid;
     console.log("combinedid=", combinedId);
@@ -102,24 +102,21 @@ function Searchbar() {
 
     setUser(null);
     setUsername("");
-   
+
     //create user chats
   };
 
   return (
-   
     <Box>
-     
       <Paper
         component="form"
         sx={{
           display: "flex",
           alignItems: "center",
           borderRadius: "default",
-          p: {lg:1,xs:0.5},
-          m: {lg:2,xs:1},
+          p: { lg: 1, xs: 0.5 },
+          m: { lg: 2, xs: 1 },
           backgroundColor: "transparent",
-         
         }}
       >
         <InputBase
@@ -163,20 +160,18 @@ function Searchbar() {
           onClick={handleSelect}
         >
           <Avatar
-            alt={user.displayName}
-            src={user.photoURL}
+            alt={user?.displayName}
+            src={user?.photoURL}
             sx={{ borderRadius: "50%", height: "4.5rem", width: "4.5rem" }}
           />
           <Typography variant="h6" sx={{ color: "#fff" }}>
             {" "}
-            {user.displayName}
+            {user?.displayName}
           </Typography>
         </Box>
       )}
       <hr />
-    
     </Box>
- 
   );
 }
 

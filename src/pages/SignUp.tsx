@@ -54,7 +54,7 @@ export default function SignUp() {
     try {
       const userdata = await signInWithPopup(auth, googleProvider);
       console.log("userData", userdata);
-      
+
       await setDoc(doc(db, "users", userdata.user.uid), {
         uid: userdata.user.uid,
         displayName: userdata.user.displayName,
@@ -63,7 +63,6 @@ export default function SignUp() {
       });
 
       await setDoc(doc(db, "userChats", userdata.user.uid), {});
-      
 
       navigate("/");
     } catch (error) {
@@ -72,9 +71,7 @@ export default function SignUp() {
   };
 
   React.useEffect(() => {
-    
     console.log("users=", user);
-  
   }, [user]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -167,7 +164,7 @@ export default function SignUp() {
               photoURL: downloadURL,
             });
 
-            localStorage.setItem('profile_name', displayName+'_'+token)
+            localStorage.setItem("profile_name", displayName + "_" + token);
 
             await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
@@ -194,7 +191,7 @@ export default function SignUp() {
         component="main"
         id="mainCard"
         sx={{
-          height: "75%",
+          height: "82vh",
           width: "80%",
 
           position: "relative",
@@ -251,7 +248,9 @@ export default function SignUp() {
           >
             <Box sx={{ fontSize: "35px" }}>Welcome to </Box>
             <Box>{<SiArlo />}</Box>
-            <Box sx={{ color: "var(--main-color)" }}>Message Mingle</Box>
+            <Box sx={{ color: "var(--main-color)", fontSize: "25px" }}>
+              Message Mingle
+            </Box>
             <Box sx={{ fontSize: "25px", mt: "25px" }}>
               {" "}
               " Where Every Interaction Counts! Discover a world of connections,
@@ -282,7 +281,7 @@ export default function SignUp() {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
-              my: 8,
+              my: 1,
               mx: 4,
               display: "flex",
               flexDirection: "column",
@@ -378,7 +377,7 @@ export default function SignUp() {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  p: 3,
+                  p: 1,
                   fontSize: 20,
                   backgroundColor: "var(--main-color)",
                   "&:hover": {
@@ -400,14 +399,14 @@ export default function SignUp() {
                   display: "flex",
                   justifyContent: "center",
                   position: "relative",
-                  mt: 2,
+                  mt: 1,
                 }}
               >
                 <div id="line"></div>
                 <span id="or">or</span>
               </Box>
 
-              <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
+              <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
                 <button
                   onClick={signInWithGoogle}
                   style={{ border: "none", cursor: "pointer" }}

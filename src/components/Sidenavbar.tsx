@@ -16,20 +16,15 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext, useState } from "react";
 import Profile from "./Profile";
 import "../index.css";
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import CloseIcon from '@mui/icons-material/Close';
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import CloseIcon from "@mui/icons-material/Close";
 import { ChangeContext } from "../pages/Home";
 
+type PopupContextType = any;
 
-
-type PopupContextType=any;
-  
- 
-
-
-export const PopupContext = createContext<PopupContextType | undefined>(undefined); 
-
-
+export const PopupContext = createContext<PopupContextType | undefined>(
+  undefined
+);
 
 function Sidenavbar() {
   // const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -37,11 +32,8 @@ function Sidenavbar() {
   const currentUser = useContext(AuthContext);
   const settings = ["Profile", "Logout"];
   const [popup, setPopup] = useState(true);
-  const [camera, setCamera] = useState(false)
-  const {setChange} = useContext(ChangeContext)
- 
-
-  
+  const [camera, setCamera] = useState(false);
+  const { setChange } = useContext(ChangeContext);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -60,33 +52,50 @@ function Sidenavbar() {
     setAnchorElUser(null);
   }
 
-  const closeCamera =()=>{
-    setCamera(false)
-  }
+  const closeCamera = () => {
+    setCamera(false);
+  };
 
   // useEffect(()=>{
 
-   
   //     setChange(true)
-    
-    
 
   // })
 
   return (
     <>
-      <PopupContext.Provider value={ {setPopup} }>
-
-        {!popup ? <Profile setcamera = {setCamera}/> : null} 
+      <PopupContext.Provider value={{ setPopup }}>
+        {!popup ? <Profile setcamera={setCamera} /> : null}
         {popup}
 
-        <div className={`${camera? 'overlayCamera' : 'cameraNotactive'}`}>
-          <Box sx={{ position: "absolute", top: "10%", left: "35%" , height:680, width:680, backgroundColor:'var(--main-color)', pt:2, textAlign:'center',boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}>
-          <CloseIcon sx={{fontSize:40, cursor:'pointer',float:'left', pl:2}} onClick={()=>closeCamera()}/>
-            <video src="" ></video>
-            <PhotoCameraIcon sx={{fontSize:50,cursor:'pointer','&:hover': {boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}}/>
+        <div className={`${camera ? "overlayCamera" : "cameraNotactive"}`}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "10%",
+              left: "35%",
+              height: 480,
+              width: 580,
+              backgroundColor: "var(--main-color)",
+              pt: 2,
+              textAlign: "center",
+              boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+            }}
+          >
+            <CloseIcon
+              sx={{ fontSize: 40, cursor: "pointer", float: "left", pl: 2 }}
+              onClick={() => closeCamera()}
+            />
+            <video src=""></video>
+            <PhotoCameraIcon
+              sx={{
+                fontSize: 50,
+                cursor: "pointer",
+                "&:hover": { boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" },
+              }}
+            />
           </Box>{" "}
-          </div>
+        </div>
 
         <AppBar
           position="static"
@@ -137,7 +146,6 @@ function Sidenavbar() {
                 <Box sx={{ flexGrow: 0 }}>
                   <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    
                       <Avatar
                         alt={currentUser.displayName}
                         src={currentUser.photoURL}
@@ -147,13 +155,8 @@ function Sidenavbar() {
                           width: { lg: "3.5rem", xs: "2rem" },
                         }}
                       />
-
-
-
                     </IconButton>
-                  
                   </Tooltip>
-                 
 
                   <Menu
                     sx={{ mt: "45px" }}
@@ -186,15 +189,8 @@ function Sidenavbar() {
           </Container>
         </AppBar>
       </PopupContext.Provider>
-     
     </>
-
-    
   );
-  
-
-  
 }
-
 
 export default Sidenavbar;
