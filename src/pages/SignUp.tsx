@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import * as React from "react";
 import "../index.css";
 import { useState } from "react";
