@@ -22,7 +22,6 @@ function Home() {
             display: "flex",
             height: "100vh",
             // border: "2px solid blue",
-            //  overflow: "hidden",
             flexDirection: { md: "row", sm: "column", xs: "column" },
           }}
         >

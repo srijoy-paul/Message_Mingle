@@ -156,6 +156,7 @@ function Searchbar() {
             p: 2,
             pl: 4,
             mr: 3,
+            border: "5px solid blue",
           }}
           onClick={handleSelect}
         >
