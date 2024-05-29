@@ -52,7 +52,7 @@ function Chats() {
         overflowY: { lg: "scroll" },
         width: { xs: "100%" },
         display: { xs: "flex", lg: "block" },
-        // border: "2px solid blue",
+
         py: 1,
       }}
     >
@@ -72,7 +72,6 @@ function Chats() {
                 cursor: "pointer",
                 p: 1,
                 mr: 1,
-                // border: "2px solid blue",
               }}
               key={chat[0]}
               onClick={() => handleSelect(chat[1]?.userInfo)}

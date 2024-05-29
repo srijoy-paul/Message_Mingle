@@ -17,7 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { db, storage } from "../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import { updateProfile } from "firebase/auth";
 import { PopupContext } from "./Sidenavbar";
@@ -27,13 +27,17 @@ import "react-toastify/dist/ReactToastify.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { ChangeContext } from "../pages/Home";
 
-function Profile(props: any) {
+export default function Profile(props: any) {
   const show = true;
   let username: string;
+  let userInfo: string;
+  let aboutData;
+  let useraboutinfo;
 
   const [viewimg, setViewImg] = useState(false);
   const currentUser = useContext(AuthContext);
   const { setChange } = useContext(ChangeContext);
+  const [aboutinfo, setAboutInfo] = useState("");
 
   const { setPopup } = useContext(PopupContext);
 
@@ -122,27 +126,66 @@ function Profile(props: any) {
       (document.getElementById("username") as HTMLInputElement | null)?.focus();
       setIsReadOnlyname(false);
     } else {
+      await updateProfile(currentUser, {
+        displayName: username,
+      });
+
       await updateDoc(doc(db, "users", currentUser.uid), {
         displayName: username,
       });
+
       setIsReadOnlyname(true);
-      console.log("updated");
     }
   };
 
   const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     username = e.target.value;
-    console.log("username=", username);
   };
 
-  const toggleReadOnlyabout = () => {
+  const updateUserInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    userInfo = e.target.value;
+    setAboutInfo(userInfo);
+  };
+  const toggleReadOnlyabout = async () => {
     if (isReadOnlyabout === true) {
       (document.getElementById("userinfo") as HTMLInputElement | null)?.focus();
       setIsReadOnlyabout(false);
     } else {
+      await setDoc(doc(db, "aboutUser", currentUser.uid), {
+        about: aboutinfo,
+      });
+
+      const userDocRef = doc(db, "aboutUser", currentUser.uid);
+
+      try {
+        aboutData = await getDoc(userDocRef);
+      } catch (error) {
+        console.log(error);
+      }
+
+      useraboutinfo =
+        aboutData._document.data.value.mapValue.fields.about.stringValue;
+
       setIsReadOnlyabout(true);
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      const userDocRef = doc(db, "aboutUser", currentUser.uid);
+
+      try {
+        aboutData = await getDoc(userDocRef);
+      } catch (error) {
+        console.log(error);
+      }
+
+      useraboutinfo =
+        aboutData._document.data.value.mapValue.fields.about.stringValue;
+
+      setAboutInfo(useraboutinfo);
+    })();
+  }, []);
 
   useEffect(() => {
     const ignoreClickOnImg = document.getElementsByClassName("profileimg")[0];
@@ -191,12 +234,10 @@ function Profile(props: any) {
           await updateDoc(doc(db, "users", currentUser.uid), {
             photoURL: downloadURL,
           });
+          window.location.reload();
         });
-        setChange(true);
-        setPopup(true);
       }
     );
-    //  setShow(false)
   };
 
   const closeProfile = () => {
@@ -383,6 +424,8 @@ function Profile(props: any) {
                   className="userinfo"
                   id="userinfo"
                   readOnly={isReadOnlyabout}
+                  value={aboutinfo}
+                  onChange={(e) => updateUserInfo(e)}
                 />{" "}
                 <EditIcon
                   sx={{ fontSize: "25px", cursor: "pointer" }}
@@ -398,4 +441,4 @@ function Profile(props: any) {
   );
 }
 
-export default Profile;
+// export default Profile;
