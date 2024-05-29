@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box } from "@mui/system";
 import { SetStateAction, useContext, useEffect, useState } from "react";
 import "../index.css";
@@ -90,7 +91,7 @@ function Chats() {
                     variant="h6"
                     sx={{
                       color: "#E8DFCA",
-                      fontSize: { lg: "20px", sm: "18px" },
+                      fontSize: { lg: "15px", sm: "12px" },
                     }}
                     title={chat[1]?.lastMessage?.text}
                   >

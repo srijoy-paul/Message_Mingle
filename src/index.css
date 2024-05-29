@@ -11,6 +11,9 @@
   font-size: 12px;
 }
 
+#root {
+  height: 100%;
+}
 #mainCard:hover #hoverEfft {
   left: 0;
 }

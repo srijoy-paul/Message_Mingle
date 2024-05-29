@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Sidebar from "../components/Sidebar";
 import Chat from "../components/Chat";
-import { Box } from "@mui/material";
+import { Box, Hidden } from "@mui/material";
 import "../index.css";
 import { createContext, useState } from "react";
 
@@ -21,6 +21,8 @@ function Home() {
           sx={{
             display: "flex",
             height: "100vh",
+
+            //  overflow: "hidden",
             flexDirection: { md: "row", sm: "column", xs: "column" },
           }}
         >
@@ -28,7 +30,7 @@ function Home() {
             sx={{
               bgcolor: "var(--second-color)",
 
-              height: { md: "100%", xs: "20%" },
+              height: { md: "100vh", xs: "20%" },
               width: { md: "30%", xs: "100%" },
             }}
           >
@@ -39,7 +41,7 @@ function Home() {
             sx={{
               bgcolor: "var(--light-color)",
 
-              height: { md: "100%", xs: "80%" },
+              height: { md: "100vh", xs: "80%" },
 
               width: { md: "70%", xs: "100%" },
             }}

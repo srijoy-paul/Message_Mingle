@@ -132,6 +132,7 @@ function Profile(props: any) {
 
   const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     username = e.target.value;
+    console.log("username=", username);
   };
 
   const toggleReadOnlyabout = () => {

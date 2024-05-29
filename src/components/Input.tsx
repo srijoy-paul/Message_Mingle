@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Button } from "@mui/material";
 import "../index.css";
 import SendIcon from "@mui/icons-material/Send";
@@ -104,12 +105,13 @@ function Input() {
 
       <InputEmoji
         value={text}
-        onChange={(e: any) => setText(e.target.value)}
+        onChange={(e: any) => {
+          setText(e);
+        }}
         cleanOnEnter
         onEnter={handleOnEnter}
         color="#494846"
         background="#ddddf7"
-        fontSize={16}
         placeholder="Type your message here..."
         shouldReturn={false}
         shouldConvertEmojiToImage={false}
