@@ -55,12 +55,6 @@ function Sidenavbar() {
     setCamera(false);
   };
 
-  // useEffect(()=>{
-
-  //     setChange(true)
-
-  // })
-
   return (
     <>
       <PopupContext.Provider value={{ setPopup }}>
@@ -99,8 +93,9 @@ function Sidenavbar() {
         <AppBar
           position="static"
           sx={{
-            height: { xs: "30%", lg: "10%" },
+            height: { xs: "30%", md: "10%" },
             bgcolor: "var(--main-color)",
+            // border: "5px solid blue",
           }}
         >
           <Container
@@ -109,6 +104,7 @@ function Sidenavbar() {
               display: "flex",
               alignItems: "center",
               height: "100%",
+              // border: "2px solid yellow",
               justifyContent: { sm: "space-between" },
             }}
           >
@@ -121,6 +117,7 @@ function Sidenavbar() {
                   justifyContent: { lg: "space-between", md: "end", xs: "end" },
                   alignItems: "center",
                   width: { lg: "100%", md: "80%", xs: "100%" },
+                  // border: "5px solid blue",
                 }}
               >
                 <Typography

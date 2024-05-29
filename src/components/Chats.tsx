@@ -47,11 +47,12 @@ function Chats() {
     <Box
       id="chat-container"
       sx={{
-        height: { lg: "80%", xs: "30%" },
-        m: { lg: 2, xs: 0 },
+        height: { md: "79%", xs: "30%" },
+        // m: { lg: 2, xs: 0 },
         overflowY: { lg: "scroll" },
         width: { xs: "100%" },
         display: { xs: "flex", lg: "block" },
+        // border: "2px solid blue",
       }}
     >
       {Object?.entries(chats)

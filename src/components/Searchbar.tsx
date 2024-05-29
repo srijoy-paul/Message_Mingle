@@ -107,7 +107,7 @@ function Searchbar() {
   };
 
   return (
-    <Box>
+    <Box sx={{ height: { md: "10%" } }}>
       <Paper
         component="form"
         sx={{
