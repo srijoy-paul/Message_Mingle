@@ -107,7 +107,7 @@ function Searchbar() {
   };
 
   return (
-    <Box>
+    <Box sx={{ height: { md: "10%" } }}>
       <Paper
         component="form"
         sx={{
@@ -156,6 +156,7 @@ function Searchbar() {
             p: 2,
             pl: 4,
             mr: 3,
+            border: "5px solid blue",
           }}
           onClick={handleSelect}
         >

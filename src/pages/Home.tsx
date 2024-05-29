@@ -21,16 +21,15 @@ function Home() {
           sx={{
             display: "flex",
             height: "100vh",
-
-            //  overflow: "hidden",
+            // border: "2px solid blue",
             flexDirection: { md: "row", sm: "column", xs: "column" },
           }}
         >
           <Box
             sx={{
               bgcolor: "var(--second-color)",
-
-              height: { md: "100vh", xs: "20%" },
+              // border: "2px solid red",
+              height: { md: "100%", xs: "20%" },
               width: { md: "30%", xs: "100%" },
             }}
           >
@@ -40,8 +39,8 @@ function Home() {
           <Box
             sx={{
               bgcolor: "var(--light-color)",
-
-              height: { md: "100vh", xs: "80%" },
+              // border: "2px solid red",
+              height: { md: "100%", xs: "80%" },
 
               width: { md: "70%", xs: "100%" },
             }}

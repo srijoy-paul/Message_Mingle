@@ -1,23 +1,15 @@
-
-import Sidenavbar from './Sidenavbar'
-import Searchbar from './Searchbar'
-import Chats from './Chats'
-
+import Sidenavbar from "./Sidenavbar";
+import Searchbar from "./Searchbar";
+import Chats from "./Chats";
 
 function Sidebar() {
-
- 
-    
-  
   return (
-    <>
-     < Sidenavbar/>
-      <Searchbar/>
-      <Chats/>
-    </>
-  
-
-  )
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <Sidenavbar />
+      <Searchbar />
+      <Chats />
+    </div>
+  );
 }
 
-export default Sidebar
+export default Sidebar;

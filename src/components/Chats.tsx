@@ -47,11 +47,13 @@ function Chats() {
     <Box
       id="chat-container"
       sx={{
-        height: { lg: "80%", xs: "30%" },
-        m: { lg: 2, xs: 0 },
+        height: { md: "80%", xs: "30%" },
+        // m: { lg: 2, xs: 0 },
         overflowY: { lg: "scroll" },
         width: { xs: "100%" },
         display: { xs: "flex", lg: "block" },
+        // border: "2px solid blue",
+        py: 1,
       }}
     >
       {Object?.entries(chats)
@@ -63,7 +65,15 @@ function Chats() {
           return (
             <Box
               className="user"
-              sx={{ display: "flex", gap: 2, cursor: "pointer", p: 2, mr: 3 }}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                cursor: "pointer",
+                p: 1,
+                mr: 1,
+                // border: "2px solid blue",
+              }}
               key={chat[0]}
               onClick={() => handleSelect(chat[1]?.userInfo)}
             >
